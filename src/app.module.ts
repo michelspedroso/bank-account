@@ -2,11 +2,12 @@ import * as path from 'path';
 
 import { Module } from '@nestjs/common';
 import { BootModule, Boot } from '@nestcloud/boot';
-import { TypeOrmModule, TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { BOOT } from '@nestcloud/common';
 
 import { MYSQL_ENTITIES } from './mysql-entities';
 import { UserModule } from './user/user.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './user/user.module';
       },
     }),
     UserModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],

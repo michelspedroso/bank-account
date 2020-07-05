@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-
-import { IBoot, BOOT } from '@nestcloud/common';
 import { INestApplication } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked';
+import { IBoot, BOOT } from '@nestcloud/common';
+
+import { AppModule } from './app.module';
 import { ISwaggerConfig } from './config/types/swagger';
+initializeTransactionalContext();
 
 function setSwagger(app: INestApplication, { name, version, path }: ISwaggerConfig) {
   const options = new DocumentBuilder()

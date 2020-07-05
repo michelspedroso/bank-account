@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 
@@ -10,10 +10,13 @@ import { UserEntity } from './model/user.entity';
 import { IUserJwt } from './etc/types';
 import { createJwtPayload } from './etc/utils';
 import { ER_USER_DUP_ENTRY } from './etc/constants';
+import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 @Injectable()
 export class UserService {
-    private readonly defaultRelations = [];
+    private readonly defaultRelations = [
+        'account'
+    ];
 
     constructor(
         @InjectRepository(UserRepository)
@@ -26,18 +29,24 @@ export class UserService {
     }
 
     async getUserById(id: string): Promise<UserEntity> {
-        return await this.userRepository.findOneOrFail(id, { relations: this.defaultRelations });
+        return await this.userRepository.findOneOrFail(id,
+            {
+                select: ['firstName', 'lastName', 'username', 'id'],
+                relations: this.defaultRelations
+            }
+        );
     }
 
     async getUserByUsername(username: string): Promise<UserEntity> {
         return await this.userRepository.findOneOrFail({ where: { username }, relations: this.defaultRelations });
     }
 
+    @Transactional()
     async signUpLocal(body: UserSignUpDto) {
-        let user = await this.userRepository.findOne({ username: body.username }); 
+        let user = await this.userRepository.findOne({ username: body.username });
 
         if (user) {
-            throw new BadRequestException(ER_USER_DUP_ENTRY)
+            throw new ConflictException(ER_USER_DUP_ENTRY)
         }
 
         user = await this.userRepository.save(body);

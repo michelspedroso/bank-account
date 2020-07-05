@@ -36,7 +36,7 @@ export class UserController {
     async signin(
         @Jwt() jwt: IUserJwt,
         @Body() body: UserSignInDto,
-        ) {
+    ) {
         const { accessToken, user } = await this.userService.signIn(
             jwt,
         );
