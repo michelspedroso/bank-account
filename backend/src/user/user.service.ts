@@ -59,8 +59,8 @@ export class UserService {
       throw new ConflictException(ER_USER_DUP_ENTRY);
     }
 
-    user = await this.userRepository.save(body);
     body.password = await this.hash(body.password);
+    user = await this.userRepository.save(body);
     const jwt = createJwtPayload(user);
     const accessToken = await this.jwtService.signAsync(jwt);
     return {

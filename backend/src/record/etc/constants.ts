@@ -1,0 +1,1 @@
+export const ER_RECORDS_NOT_FOUND = 'Records not found';
