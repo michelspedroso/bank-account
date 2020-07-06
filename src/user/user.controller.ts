@@ -13,45 +13,36 @@ import { UserSignInDto } from './dto/user-sign-in-local.dto';
 @Controller('user')
 @ApiTags('user')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
 
-    constructor(private readonly userService: UserService) { }
+  @Post('signup')
+  async userSignUpLocal(@Body() body: UserSignUpDto) {
+    const { accessToken, user } = await this.userService.signUpLocal(body);
+    return {
+      data: {
+        accessToken,
+        userId: user.id
+      }
+    };
+  }
 
-    @Post('signup')
-    async userSignUpLocal(@Body() body: UserSignUpDto) {
-        const {
-            accessToken,
-            user,
-        } = await this.userService.signUpLocal(body);
-        return {
-            data: {
-                accessToken,
-                userId: user.id,
-            },
-        };
-    }
+  @Post('signin')
+  @ApiBearerAuth()
+  @UseGuards(LocalGuard)
+  async signin(@Jwt() jwt: IUserJwt, @Body() body: UserSignInDto) {
+    const { accessToken, user } = await this.userService.signIn(jwt);
+    return {
+      data: {
+        accessToken,
+        userId: user.id
+      }
+    };
+  }
 
-    @Post('signin')
-    @ApiBearerAuth()
-    @UseGuards(LocalGuard)
-    async signin(
-        @Jwt() jwt: IUserJwt,
-        @Body() body: UserSignInDto,
-    ) {
-        const { accessToken, user } = await this.userService.signIn(
-            jwt,
-        );
-        return {
-            data: {
-                accessToken,
-                userId: user.id,
-            },
-        };
-    }
-
-    @Get('detail')
-    @ApiBearerAuth()
-    @UseGuards(JwtGuard)
-    async getUserDetail(@Jwt() jwt: IUserJwt): Promise<UserEntity> {
-        return await this.userService.getUserById(jwt.sub);
-    }
+  @Get('detail')
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  async getUserDetail(@Jwt() jwt: IUserJwt): Promise<UserEntity> {
+    return await this.userService.getUserById(jwt.sub);
+  }
 }

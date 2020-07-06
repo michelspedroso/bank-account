@@ -1,6 +1,10 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { createJwtPayload } from '../etc/utils';
 import { ER_PASSWORD_MISMATCH, ER_PERMISSION_DENIED } from '../etc/constants';
@@ -13,9 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(username: string, password: string) {
-    const user = await this.userService.getUserByUsername(
-      username,
-    );
+    const user = await this.userService.getUserByUsername(username);
     if (!user) {
       throw new UnauthorizedException(ER_PERMISSION_DENIED);
     }

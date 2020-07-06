@@ -1,4 +1,3 @@
 export enum AccountTypes {
-    Current = 'current',
-  }
-  
+  Current = 'current'
+}

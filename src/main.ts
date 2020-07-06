@@ -8,7 +8,10 @@ import { AppModule } from './app.module';
 import { ISwaggerConfig } from './config/types/swagger';
 initializeTransactionalContext();
 
-function setSwagger(app: INestApplication, { name, version, path }: ISwaggerConfig) {
+function setSwagger(
+  app: INestApplication,
+  { name, version, path }: ISwaggerConfig
+) {
   const options = new DocumentBuilder()
     .setTitle(name || 'app')
     .setVersion(version || '0.0.0')

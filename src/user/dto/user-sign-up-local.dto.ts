@@ -1,9 +1,4 @@
-import {
-  IsEmail,
-  IsString,
-  Length,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsEmail, IsString, Length, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IUserLocalBody } from '../etc/types';
 
@@ -26,5 +21,4 @@ export class UserSignUpDto implements IUserLocalBody {
   @Length(8, 128, { message: 'Password must have at least 8 characters' })
   @ApiProperty({ example: 'password1234' })
   password: string;
-
 }

@@ -14,9 +14,7 @@ import { JwtGuard } from './guard/jwt.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      UserRepository,
-    ]),
+    TypeOrmModule.forFeature([UserRepository]),
     JwtModule.registerAsync({
       inject: [BOOT],
       useFactory: (config: Boot) => {
@@ -24,19 +22,14 @@ import { JwtGuard } from './guard/jwt.guard';
         return {
           secret,
           signOptions: {
-            expiresIn,
-          },
+            expiresIn
+          }
         };
-      },
-    }),
+      }
+    })
   ],
-  providers: [
-    UserService, 
-    JwtService,
-    JwtStrategy, 
-    LocalStrategy, 
-    JwtGuard,
-  ],
+  providers: [UserService, JwtStrategy, LocalStrategy, JwtGuard],
+  exports: [UserService, JwtModule, TypeOrmModule],
   controllers: [UserController]
 })
-export class UserModule { }
+export class UserModule {}

@@ -10,7 +10,9 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["mocha"],
+    "typeRoots": ["overrides", "node_modules/@types"]
   },
   "exclude": [
     "node_modules",

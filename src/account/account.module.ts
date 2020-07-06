@@ -4,21 +4,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountService } from './account.service';
 import { AccountRepository } from './model/account.repository';
 import { AccountController } from './account.controller';
-import { UserService } from './../user/user.service';
-import { UserRepository } from './../user/model/user.repository';
+import { JwtGuard } from './../user/guard/jwt.guard';
+import { UserModule } from './../user/user.module';
+import { RecordModule } from './../record/record.module';
+import { RecordRepository } from './../record/model/record.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      AccountRepository,
-      UserRepository,
-    ]),
+    TypeOrmModule.forFeature([AccountRepository]),
+    UserModule,
+    RecordModule
   ],
   exports: [AccountService],
-  providers: [
-    AccountService,
-    UserService,
-  ],
-  controllers: [AccountController],
+  providers: [AccountService, JwtGuard],
+  controllers: [AccountController]
 })
 export class AccountModule {}

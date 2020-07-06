@@ -1,31 +1,13 @@
 import * as path from 'path';
 
 import { Module } from '@nestjs/common';
-import { BootModule, Boot } from '@nestcloud/boot';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { BOOT } from '@nestcloud/common';
-
-import { MYSQL_ENTITIES } from './mysql-entities';
 import { UserModule } from './user/user.module';
 import { AccountModule } from './account/account.module';
+import { CoreModule } from './core.module';
 
 @Module({
-  imports: [
-    BootModule.forRoot({
-      filePath: path.resolve(__dirname, `../config/${process.env.NODE_ENV}.yaml`),
-    }),
-    TypeOrmModule.forRootAsync({
-      inject: [BOOT],
-      useFactory: (config: Boot) => {
-        return {
-          ...config.get('database'), entities: MYSQL_ENTITIES,
-        } as TypeOrmModuleOptions;
-      },
-    }),
-    UserModule,
-    AccountModule,
-  ],
+  imports: [CoreModule, UserModule, AccountModule],
   controllers: [],
-  providers: [],
+  providers: []
 })
-export class AppModule { }
+export class AppModule {}

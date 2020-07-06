@@ -16,7 +16,7 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<
   get manager(): EntityManager {
     return getEntityManagerOrTransactionManager(
       this.connectionName,
-      this._manager,
+      this._manager
     );
   }
 }
