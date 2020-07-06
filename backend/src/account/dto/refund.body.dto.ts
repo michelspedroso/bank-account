@@ -2,7 +2,7 @@ import { IsString, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBankAccount } from '../etc/decorators';
 
-export class DepositBodyDto {
+export class RefundBodyDto {
   @IsBankAccount()
   @IsString()
   @ApiProperty({ type: String, example: '123456-5' })

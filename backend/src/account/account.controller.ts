@@ -9,6 +9,8 @@ import { AccountService } from './account.service';
 import { AccountEntity } from './model/account.entity';
 import { PaymentBodyDto } from './dto/payment.body.dto';
 import { DepositBodyDto } from './dto/deposit.body.dto';
+import { RefundBodyDto } from './dto/refund.body.dto';
+import { TransferBodyDto } from './dto/transfer.body.dto';
 
 @Controller('account')
 @ApiTags('account')
@@ -33,5 +35,15 @@ export class AccountController {
   @Post('deposit')
   async applyDeposit(@Jwt() jwt: IUserJwt, @Body() body: DepositBodyDto) {
     return await this.accountService.applyDeposit(jwt, body);
+  }
+
+  @Post('refund')
+  async applyRefund(@Jwt() jwt: IUserJwt, @Body() body: RefundBodyDto) {
+    return await this.accountService.applyRefund(jwt, body);
+  }
+
+  @Post('transfer')
+  async applyTransfer(@Jwt() jwt: IUserJwt, @Body() body: TransferBodyDto) {
+    return await this.accountService.applyTransfer(jwt, body);
   }
 }

@@ -1,3 +1,7 @@
-node_modules
-volumes
-dist
+backend/node_modules
+backend/dist
+backend/volumes
+
+frontend
+frontend/node_modules
+frontend/dist
