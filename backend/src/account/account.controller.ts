@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { JwtGuard } from './../user/guard/jwt.guard';
@@ -11,11 +11,13 @@ import { PaymentBodyDto } from './dto/payment.body.dto';
 import { DepositBodyDto } from './dto/deposit.body.dto';
 import { RefundBodyDto } from './dto/refund.body.dto';
 import { TransferBodyDto } from './dto/transfer.body.dto';
+import { PriceInterceptor } from './../config/middlewares/price.interceptor';
 
 @Controller('account')
 @ApiTags('account')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
+@UseInterceptors(PriceInterceptor)
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 

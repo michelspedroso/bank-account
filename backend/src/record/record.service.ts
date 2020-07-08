@@ -10,10 +10,11 @@ import { UserRepository } from './../user/model/user.repository';
 import { AccountRepository } from './../account/model/account.repository';
 import { AccountEntity } from './../account/model/account.entity';
 import { ER_RECORDS_NOT_FOUND } from './etc/constants';
+import { BalenceUtils } from 'src/account/etc/utils';
 
 @Injectable()
 export class RecordService {
-    private readonly defaultRelations = ['account', 'user'];
+    private readonly defaultRelations = ['user', 'toAccount', 'fromAccount', 'toAccount.user'];
     constructor(
         @InjectRepository(RecordRepository)
         private readonly recordRepository: RecordRepository,
@@ -23,8 +24,15 @@ export class RecordService {
         private readonly accountRepository: AccountRepository,
     ) { }
 
-    async getRecords(account: AccountEntity) {
-        return await this.recordRepository.findRecordByAccount(account);
+    async getRecords(account: AccountEntity): Promise<RecordEntity[]> {
+        // return await this.recordRepository.findRecordByAccount(account);
+        const [fromExtracts, toExtracts] = await Promise.all([
+            this.recordRepository.find({ where: { fromAccount: account }, relations: this.defaultRelations }),
+            this.recordRepository.find({ where: { toAccount: account }, relations: this.defaultRelations }),
+        ]);
+        const extracts = [ ...fromExtracts, ...toExtracts];
+        extracts.sort((a,b) => +b.createdAt - +a.createdAt);
+        return extracts;
     }
 
     async createDeposit(record: RecordEntity): Promise<RecordEntity> {
@@ -40,7 +48,7 @@ export class RecordService {
         } catch (err) {
             throw new NotFoundException(ER_RECORDS_NOT_FOUND);
         }
-        
+
         return await this.getRecords(account);
     }
 }

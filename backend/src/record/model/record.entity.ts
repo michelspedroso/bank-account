@@ -1,4 +1,4 @@
-import { Entity, OneToOne, JoinColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, JoinColumn, Column, ManyToOne, Generated } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseEntity } from './../../config/mysql/base-entity';
@@ -16,9 +16,17 @@ export class RecordEntity extends BaseEntity {
   @ApiProperty({ type: Number, required: true })
   balance: number;
 
+  formatedBalance: string;
+
   @Column({ type: 'int', nullable: false })
   @ApiProperty({ type: Number, required: true })
   value: number;
+
+  formatedValue: string;
+
+  // @Column()
+  // @Generated('uuid')
+  // transactionId: string;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({})

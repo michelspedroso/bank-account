@@ -1,4 +1,5 @@
 const ACCESS_TOKEN = 'accessToken';
+const USER_ID = 'userId';
 
 class Page {
   constructor() {
@@ -21,8 +22,9 @@ class Page {
     }
   }
 
-  setAuth(accessToken) {
+  setAuth(accessToken, userId) {
     localStorage.setItem(ACCESS_TOKEN, `Bearer ${accessToken}`);
+    localStorage.setItem(USER_ID, userId);
   }
 
   getAuth() {

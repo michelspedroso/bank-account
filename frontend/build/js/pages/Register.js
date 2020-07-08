@@ -20,8 +20,8 @@ class RegisterPage extends Page {
 
         try {
             const response = await userService.signup(payload);
-            const { accessToken } = response.data;
-            this.setAuth(accessToken);
+            const { accessToken, userId } = response.data;
+            this.setAuth(accessToken, userId);
             window.location.href = '/dashboard.html';
         } catch (err) {
             alert(err);

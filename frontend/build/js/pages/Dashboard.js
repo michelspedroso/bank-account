@@ -9,14 +9,6 @@ class DashboardPage extends Page {
     }
 
     binds() {
-        // $('.dropdown-item dashboard-dropdown-item').on('click', this.handleSelectAccount.bind(this));
-        // $('ul li').forEach(element => element.addEventListener('click', this.handleSelectAccount.bind(this)));
-        // $('#dashboard-menu-accounts')[0].addEventListener("click", function(e) {
-        //     if (e.target && e.target.matches("li.nav-item")) {
-        //       e.target.className = "foo"; // new class name here
-        //       alert("clicked " + e.target.innerText);
-        //     }
-        //   });
         $('#dashboard-menu-accounts').change(this.handleSelectAccount);
     }
 
@@ -30,30 +22,35 @@ class DashboardPage extends Page {
         }
     }
 
+    switchArrowStyle(extract) {
+        if(extract.type === 'deposit' || !extract.fromAccount) {
+            return 'success';
+        }
+        return 'danger';
+    }
+
     async handleSelectAccount(event) {
         const cc = event.target.value;
         try {
             const extracts = await recordService.getExtracts({ cc });
+            const _this = this;
             const items = extracts.map(extract => {
+                const arrowStyle = extract.type === 'deposit' || !extract.fromAccount ? 'success' : 'danger';
                 return `
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                `
+                <td>${extract.type}</td>
+                <td><small class="text-${arrowStyle} mr-1"><i class="fas fa-arrow-up"></i></small> ${extract.formatedValue}</td>
+                <td>123123213123-31231</td>`;
             });
-            $('#dashboard-table').html(items.join(''));
+            $('#dashboard-table').html(items.join('\n'));
         } catch (err) {
-
+            console.error(err)
         }
     }
 
     populateFields(user) {
         $('#dashboard-name').text(`${user.firstName} ${user.lastName}`);
         $('#dashboard-username').text(user.username);
-        $('#dashboard-balance').text(user.accounts.length ? user.accounts[0].formattedBalance : 'R$ 0,00');
+        $('#dashboard-balance').text('-');
     }
 
     populateAccountDropdown(accounts) {

@@ -7,7 +7,7 @@ import { AccountController } from './account.controller';
 import { JwtGuard } from './../user/guard/jwt.guard';
 import { UserModule } from './../user/user.module';
 import { RecordModule } from './../record/record.module';
-import { RecordRepository } from './../record/model/record.repository';
+import { PriceInterceptor } from './../config/middlewares/price.interceptor';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { RecordRepository } from './../record/model/record.repository';
     RecordModule
   ],
   exports: [AccountService],
-  providers: [AccountService, JwtGuard],
+  providers: [AccountService, JwtGuard, PriceInterceptor],
   controllers: [AccountController]
 })
 export class AccountModule {}

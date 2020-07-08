@@ -6,11 +6,12 @@ import { RecordRepository } from './model/record.repository';
 import { RecordController } from './record.controller';
 import { UserRepository } from './../user/model/user.repository';
 import { AccountRepository } from './../account/model/account.repository';
+import { PriceInterceptor } from './../config/middlewares/price.interceptor';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RecordRepository, UserRepository, AccountRepository])],
   exports: [RecordService],
-  providers: [RecordService],
+  providers: [RecordService, PriceInterceptor],
   controllers: [RecordController]
 })
 export class RecordModule {}
