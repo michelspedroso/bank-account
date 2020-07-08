@@ -25,6 +25,7 @@ import { RecordEntity } from './../record/model/record.entity';
 import { RecordRepository } from './../record/model/record.repository';
 import { RefundBodyDto } from './dto/refund.body.dto';
 import { TransferBodyDto } from './dto/transfer.body.dto';
+import { relative } from 'path';
 
 @Injectable()
 export class AccountService {
@@ -36,6 +37,15 @@ export class AccountService {
     private readonly userService: UserService,
     private readonly recordService: RecordService
   ) { }
+
+  getAccountTypes() {
+    return Object.values(AccountTypes);
+  }
+
+  async getAccountsByUser(jwt: IUserJwt): Promise<AccountEntity[]> {
+    const user = await this.userService.getUserById(jwt.sub);
+    return await this.accountRepository.find({ where: { user }, relations: ['user'] });
+  }
 
   generateAccountNumber(): string {
     const numberAccount = Math.floor(Math.random() * 1000000);
@@ -62,6 +72,10 @@ export class AccountService {
   async getAccountByNumber(accountNumber: string, user?: UserEntity): Promise<AccountEntity> {
     const where: { cc: string, user?: UserEntity } = { cc: accountNumber };
 
+    if (user) {
+      where.user = user;
+    }
+
     const toAccount = await this.accountRepository.findOne(where);
     if (!toAccount) {
       throw new NotFoundException(ER_ACCOUNT_NOT_FOUND);
@@ -70,11 +84,7 @@ export class AccountService {
   }
 
   async getAccountByUser(user: UserEntity): Promise<AccountEntity> {
-    const account = await this.accountRepository.findOneOrFail({ user });
-
-    const { formatted } = BalenceUtils.create(account.balance);
-    account.formattedBalance = formatted;
-    return account;
+    return await this.accountRepository.findOneOrFail({ user });
   }
 
   @Transactional()
@@ -104,7 +114,7 @@ export class AccountService {
     const toAccount = await this.getAccountByNumber(body.toAccountNumber, user);
 
     toAccount.balance = BalenceUtils.add(toAccount.balance, body.value);
-    
+
     await Promise.all([
       this.accountRepository.save(toAccount),
       this.saveRecord({

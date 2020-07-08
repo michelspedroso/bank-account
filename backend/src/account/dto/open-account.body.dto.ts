@@ -1,4 +1,4 @@
-import { IsString, IsEnum } from 'class-validator';
+import { IsString, IsEnum, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AccountTypes } from './../../account/etc/type';
 
@@ -8,6 +8,7 @@ export class OpenAccounBodytDto {
   type: AccountTypes;
 
   @IsString()
+  @IsNumberString()
   @ApiProperty({ type: String, example: '02223412254'})
   cpf: string;
 }

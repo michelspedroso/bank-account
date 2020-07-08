@@ -27,7 +27,7 @@ export class AccountEntity extends BaseEntity {
   @ApiProperty({ type: String, default: true, example: '1233212367' })
   cpf: string;
 
-  @Column({ type: Number, nullable: false, default: 0 })
+  @Column({ type: 'bigint', nullable: false, default: 0 })
   @ApiProperty({ type: Number, default: 230 })
   balance: number;
 

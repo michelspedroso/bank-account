@@ -16,15 +16,13 @@ class RegisterPage extends Page {
             lastName: $('input#lastName').val(),
         };
 
-        console.log('PAYLOAD:', payload);
-
         try {
             const response = await userService.signup(payload);
             const { accessToken, userId } = response.data;
             this.setAuth(accessToken, userId);
             window.location.href = '/dashboard.html';
         } catch (err) {
-            alert(err);
+            alert(err.responseJSON.message);
         }
     }
 };

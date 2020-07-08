@@ -20,6 +20,13 @@
   <div class="wrapper">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <div class="col-12">
+        <div class="col-12">
+          <ol class="float-sm-right">
+            <a id="dashboard-logout" href="javascript:;">Logout</a>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
     </nav>
     <!-- /.navbar -->
 
@@ -55,6 +62,30 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li id="dashboard-create-account" class="nav-item">
+              <a href="javascript:;" class="nav-link">
+                <p>
+                  Create account
+                </p>
+              </a>
+              </a>
+            </li>
+            <li id="dashboard-apply-deposit" class="nav-item">
+              <a href="javascript:;" class="nav-link">
+                <p>
+                  Deposit
+                </p>
+              </a>
+              </a>
+            </li>
+            <li id="dashboard-apply-refund" class="nav-item">
+              <a href="javascript:;" class="nav-link">
+                <p>
+                  Refund
+                </p>
+              </a>
+              </a>
+            </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -67,10 +98,6 @@
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-            </div><!-- /.col -->
-          </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
@@ -86,6 +113,10 @@
                 <div class="info-box-content">
                   <span class="info-box-text">Balance</span>
                   <span id="dashboard-balance" class="info-box-number" val=""></span>
+                </div>
+                <div class="info-box-content">
+                  <span class="info-box-text">Account Number</span>
+                  <span id="dashboard-account-number" class="info-box-number" val=""></span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -110,6 +141,9 @@
                       </tr>
                     </thead>
                     <tbody id="dashboard-table">
+                      <tr>
+
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -147,8 +181,6 @@
   <!-- AdminLTE -->
   <script src="dist/js/adminlte.js"></script>
 
-  <!-- OPTIONAL SCRIPTS -->
-  <script src="plugins/chart.js/Chart.min.js"></script>
 </body>
 
 </html>

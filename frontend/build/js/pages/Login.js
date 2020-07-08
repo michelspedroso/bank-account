@@ -20,7 +20,7 @@ class LoginPage extends Page {
             this.setAuth(accessToken, userId);
             window.location.href = '/dashboard.html';
         } catch (err) {
-            alert(err);
+            alert(err.responseJSON.message);
         }
     }
 };

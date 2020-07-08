@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, UseInterceptors, Get } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { JwtGuard } from './../user/guard/jwt.guard';
@@ -27,6 +27,16 @@ export class AccountController {
     @Body() body: OpenAccounBodytDto
   ): Promise<AccountEntity> {
     return await this.accountService.create(jwt, body);
+  }
+
+  @Get('')
+  async getAccounts(@Jwt() jwt: IUserJwt): Promise<AccountEntity[]> {
+    return await this.accountService.getAccountsByUser(jwt);
+  }
+
+  @Get('types')
+  async getAccountTypes(@Jwt() jwt: IUserJwt): Promise<string[]> {
+    return await this.accountService.getAccountTypes();
   }
 
   @Post('deposit')

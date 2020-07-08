@@ -15,11 +15,15 @@ import Page from './utils/Page'
 // Services
 import userService from './services/user'
 import recordService from './services/record'
+import accountService from './services/account'
 
 // Pagesg
 import RegisterPage from './pages/Register'
 import LoginPage from './pages/Login'
 import DashboardPage from './pages/Dashboard'
+import OpenAccountPage from './pages/Open-Account'
+import DepositPage from './pages/Deposit'
+import RefundPage from './pages/Refund'
 
 export {
   ControlSidebar,
@@ -35,7 +39,11 @@ export {
   Page,
   userService,
   recordService,
+  accountService,
   RegisterPage,
   LoginPage,
-  DashboardPage
+  DashboardPage,
+  OpenAccountPage,
+  DepositPage,
+  RefundPage,
 }
