@@ -24,7 +24,7 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(
     type => AccountEntity,
-    account => account.user
+    accounts => accounts.user
   )
-  account: AccountEntity[];
+  accounts: AccountEntity[];
 }

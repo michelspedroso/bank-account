@@ -99,14 +99,9 @@ export class AccountService {
   }
 
   @Transactional()
-  async applyPayment(jwt: IUserJwt, body: PaymentBodyDto) {
-    return true;
-  }
-
-  @Transactional()
   async applyDeposit(jwt: IUserJwt, body: DepositBodyDto): Promise<AccountEntity> {
     const user = await this.userService.getUserById(jwt.sub);
-    const toAccount = await this.getAccountByNumber(body.toAccountNumber);
+    const toAccount = await this.getAccountByNumber(body.toAccountNumber, user);
 
     toAccount.balance = BalenceUtils.add(toAccount.balance, body.value);
     
@@ -161,6 +156,7 @@ export class AccountService {
       this.saveRecord({
         user,
         toAccount,
+        fromAccount,
         balance: toAccount.balance,
         value: body.value,
         type: RecordTypes.Deposit

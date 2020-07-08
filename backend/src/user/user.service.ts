@@ -15,7 +15,7 @@ import { BalenceUtils } from './../account/etc/utils';
 
 @Injectable()
 export class UserService {
-  private readonly defaultRelations = ['account'];
+  private readonly defaultRelations = ['accounts'];
 
   constructor(
     @InjectRepository(UserRepository)
@@ -33,7 +33,7 @@ export class UserService {
       relations: this.defaultRelations
     });
 
-    for (const account of user.account) {
+    for (const account of user.accounts) {
       const { formatted } = BalenceUtils.create(account.balance);
       account.formattedBalance = formatted;
     }

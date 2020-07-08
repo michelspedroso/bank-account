@@ -23,7 +23,7 @@ function setSwagger(
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const boot = app.get<IBoot>(BOOT);
 
   const swagger: ISwaggerConfig = boot.get('swagger');

@@ -35,7 +35,7 @@ export class AccountEntity extends BaseEntity {
 
   @ManyToOne(
     type => UserEntity,
-    user => user.account
+    user => user.accounts
   )
   user: UserEntity;
 }

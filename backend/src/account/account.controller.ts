@@ -27,11 +27,6 @@ export class AccountController {
     return await this.accountService.create(jwt, body);
   }
 
-  @Post('payment')
-  async applyPayment(@Jwt() jwt: IUserJwt, @Body() body: PaymentBodyDto) {
-    return await this.accountService.applyPayment(jwt, body);
-  }
-
   @Post('deposit')
   async applyDeposit(@Jwt() jwt: IUserJwt, @Body() body: DepositBodyDto) {
     return await this.accountService.applyDeposit(jwt, body);
