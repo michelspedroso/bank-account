@@ -1,38 +1,59 @@
 const ACCESS_TOKEN = 'accessToken';
-const USER_ID = 'userId';
+const SELECTED_ACCOUNT = 'selectedAccount';
 
 class Page {
-  constructor() {
-    this.checkAuth();
-    this.init();
-    this.binds();
+  constructor(path) {
+    this.loadResource(path);
   }
 
   checkAuth() {
     const token = localStorage.getItem(ACCESS_TOKEN);
-    const { href } = window.location;
+    const { pathname } = window.location;
 
-    if (href.includes('login') || href.includes('register')) {
-      this.removeAtuh();
+    const isAccountPages = pathname == '/' || pathname.includes('register');
+    if (isAccountPages) {
+      this.removeAuth();
       return;
     }
 
-    if (!token) {
+    if (!isAccountPages && !token) {
       window.location.href = '/';
     }
   }
 
-  setAuth(accessToken, userId) {
+  loadResource(path) {
+    const pathName = window.location.pathname.replace(/\/|.html/g, '');
+    path = path.replace(/\/|.html/g, '');
+    if (pathName == path) {
+      this.checkAuth();
+      this.beforeInit();
+      this.init();
+      this.binds();
+    }
+  }
+
+  setAuth(accessToken) {
     localStorage.setItem(ACCESS_TOKEN, `Bearer ${accessToken}`);
-    localStorage.setItem(USER_ID, userId);
   }
 
   getAuth() {
     localStorage.getItem(ACCESS_TOKEN);
   }
 
-  removeAtuh() {
+  removeAuth() {
     localStorage.removeItem(ACCESS_TOKEN);
+  }
+
+  setSelectedAccount(account) {
+    localStorage.setItem(SELECTED_ACCOUNT, account);
+  }
+
+  gettSelectedAccount() {
+    localStorage.getItem(SELECTED_ACCOUNT);
+  }
+
+  beforeInit() {
+
   }
 
   init() {

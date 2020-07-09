@@ -7,9 +7,10 @@ import { RecordController } from './record.controller';
 import { UserRepository } from './../user/model/user.repository';
 import { AccountRepository } from './../account/model/account.repository';
 import { PriceInterceptor } from './../config/middlewares/price.interceptor';
+import { TransactionRepository } from './../transaction/model/transaction.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RecordRepository, UserRepository, AccountRepository])],
+  imports: [TypeOrmModule.forFeature([RecordRepository, UserRepository, AccountRepository, TransactionRepository])],
   exports: [RecordService],
   providers: [RecordService, PriceInterceptor],
   controllers: [RecordController]

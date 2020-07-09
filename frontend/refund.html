@@ -19,14 +19,11 @@
 <body class="hold-transition sidebar-mini">
     <div class="wrapper refund">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <div class="col-12">
-                <div class="col-12">
-                  <ol class="float-sm-right">
-                    <a id="dashboard-logout" href="javascript:;">Logout</a>
-                  </ol>
-                </div><!-- /.col -->
-              </div><!-- /.row -->
+        <nav id="dashboard-navbar" class="main-header navbar navbar-expand navbar-white navbar-light">
+            <div>
+                <a class="widget-user-desc" id="dashboard-username"></a>
+                <a id="dashboard-logout" href="javascript:;">Logout</a>
+            </div>
         </nav>
         <!-- /.navbar -->
 
@@ -40,8 +37,11 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
-                <select id="dashboard-menu-accounts" class="form-control select2">
-                </select>
+                <div class="px-1 mb-5 mt-3">
+                    <p style="color: #c2c7d0;">Selected Account</p>
+                    <select id="dashboard-menu-accounts" class="form-control select2">
+                    </select>
+                </div>
 
                 <!-- <ul class="nav nav-treeview"> -->
                 <!-- <li class="nav-item">
@@ -56,35 +56,30 @@
                         data-accordion="false">
                         <li id="dashboard" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-create-account" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
                                 <p>Create account</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-deposit" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
                                 <p>Deposit</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-refund" class="nav-item">
-                            <a href="javascript:;" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="javascript:;" class="nav-link active">
                                 <p>Refund</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-transfer" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
                                 <p>Transfer</p>
                             </a>
                             </a>
@@ -146,9 +141,10 @@
             </div>
             <!-- /.content-header -->
 
-            <div class="content-wrapper">
+            <div>
                 <section class="content">
                     <div class="row">
+                        <div class="col-4"></div>
                         <div class="col-4">
                             <div class="card card-primary">
                                 <div class="card-header">
@@ -157,7 +153,8 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="inputName">Value</label>
-                                        <input type="text" maxLength="10" id="dashboard-refund-value" class="form-control" data-mask="#.##0,00" data-mask-reverse="true">
+                                        <input type="text" maxLength="10" id="dashboard-refund-value"
+                                            class="form-control" data-mask="#.##0,00" data-mask-reverse="true">
                                     </div>
                                     <div class="form-group">
                                         <label for="inputStatus">Account</label>
@@ -166,11 +163,12 @@
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
-                                <div class="row">
-                                    <div class="col-8">
+                                <div class="row p-3">
+                                    <div class="col-4">
                                         <button id="submit" type="submit"
                                             class="btn btn-primary btn-block">Register</button>
                                     </div>
+                                    <div class="col-4"></div>
                                     <div class="col-4"
                                         style="text-align: right; padding-top: 5px; padding-right: 25px;">
                                         <a href="dashboard.html">Back</a>
@@ -179,6 +177,7 @@
                             </div>
                             <!-- /.card -->
                         </div>
+                        <div class="col-4"></div>
                 </section>
 
                 <!-- Control Sidebar -->

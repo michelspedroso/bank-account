@@ -1,10 +1,11 @@
-import { Entity, JoinColumn, Column, ManyToOne, Generated } from 'typeorm';
+import { Entity, JoinColumn, Column, ManyToOne, Generated, OneToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseEntity } from './../../config/mysql/base-entity';
 import { UserEntity } from './../../user/model/user.entity';
 import { AccountEntity } from './../../account/model/account.entity';
 import { RecordTypes } from '../etc/types';
+import { TransactionEntity } from 'src/transaction/model/transaction.entity';
 
 @Entity({ name: 'record' })
 export class RecordEntity extends BaseEntity {
@@ -24,10 +25,6 @@ export class RecordEntity extends BaseEntity {
 
   formatedValue: string;
 
-  // @Column()
-  // @Generated('uuid')
-  // transactionId: string;
-
   @ManyToOne(() => UserEntity)
   @JoinColumn({})
   user: UserEntity;
@@ -36,7 +33,14 @@ export class RecordEntity extends BaseEntity {
   @JoinColumn({})
   fromAccount: AccountEntity | null;
 
-  @ManyToOne(() => AccountEntity, {  })
+  @ManyToOne(() => AccountEntity, {})
   @JoinColumn()
   toAccount: AccountEntity;
+
+  @OneToOne(
+    type => TransactionEntity,
+    transaction => transaction.id,
+  )
+  @JoinColumn()
+  transaction: TransactionEntity;
 }

@@ -136,3 +136,17 @@
     }
   }
 }
+
+#dashboard-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: calc(100% - 250px);
+  height: 50px;
+  flex-direction: row;
+  padding: 0 15px;
+
+  div a {
+    margin-left: 15px;
+  }
+}

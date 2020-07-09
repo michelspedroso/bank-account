@@ -13,6 +13,7 @@
 
   //User name container
   .widget-user-header {
+    background-color: #EE2E5D!important;
     @if $enable-rounded {
       @include border-top-radius($border-radius);
     }

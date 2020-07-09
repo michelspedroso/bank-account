@@ -19,15 +19,11 @@
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <div class="row">
-      <div class="col-12">
-          <a id="dashboard-logout" href="javascript:;">Logout</a>
-        </div>
-        <div class="col-12">
-          <a class="widget-user-desc" id="dashboard-username"></a>
-        </div>
-      </div><!-- /.row -->
+    <nav id="dashboard-navbar" class="main-header navbar navbar-expand navbar-white navbar-light">
+      <div>
+        <a class="widget-user-desc" id="dashboard-username"></a>
+        <a id="dashboard-logout" href="javascript:;">Logout</a>
+      </div>
     </nav>
     <!-- /.navbar -->
 
@@ -56,44 +52,41 @@
             </a>
           </li> -->
         <!-- </ul> -->
-
-        <select id="dashboard-menu-accounts" class="form-control select2">
-        </select>
+        <div class="px-1 mb-5 mt-3">
+          <p style="color: #c2c7d0;">Selected Account</p>
+          <select id="dashboard-menu-accounts" class="form-control select2">
+          </select>
+        </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li id="dashboard" class="nav-item">
-              <a href="javascript:;" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+              <a href="javascript:;" class="nav-link active">
                 <p>Dashboard</p>
               </a>
-              </a>
+        
             </li>
             <li id="dashboard-create-account" class="nav-item">
               <a href="javascript:;" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Create account</p>
               </a>
               </a>
             </li>
             <li id="dashboard-apply-deposit" class="nav-item">
               <a href="javascript:;" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Deposit</p>
               </a>
               </a>
             </li>
             <li id="dashboard-apply-refund" class="nav-item">
               <a href="javascript:;" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Refund</p>
               </a>
               </a>
             </li>
             <li id="dashboard-apply-transfer" class="nav-item">
               <a href="javascript:;" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Transfer</p>
               </a>
               </a>
@@ -110,51 +103,51 @@
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
+          <div class="col-md-12">
+            <!-- Widget: user widget style 1 -->
+            <div class="card card-widget widget-user">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+              <div class="widget-user-header bg-info">
+                <h3 class="widget-user-username" id="dashboard-name"></h3>
+              </div>
+              <div class="widget-user-image">
+                <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
+              </div>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                      <h5 class="description-header" id="dashboard-balance"></h5>
+                      <span class="description-text">BALANCE</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                      <h5 class="description-header" id="dashboard-account-number"></h5>
+                      <span class="description-text">ACCOUNT NUMBER</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-4">
+                    <div class="description-block">
+                      <h5 class="description-header" id="dashboard-account-transactions"></h5>
+                      <span class="description-text">TRANSACTIONS</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+            </div>
+            <!-- /.widget-user -->
+          </div>
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
-      <div class="col-md-12">
-        <!-- Widget: user widget style 1 -->
-        <div class="card card-widget widget-user">
-          <!-- Add the bg color to the header using any of the bg-* classes -->
-          <div class="widget-user-header bg-info">
-            <h3 class="widget-user-username" id="dashboard-name"></h3>
-          </div>
-          <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
-          </div>
-          <div class="card-footer">
-            <div class="row">
-              <div class="col-sm-4 border-right">
-                <div class="description-block">
-                  <h5 class="description-header" id="dashboard-balance"></h5>
-                  <span class="description-text">BALANCE</span>
-                </div>
-                <!-- /.description-block -->
-              </div>
-              <!-- /.col -->
-              <div class="col-sm-4 border-right">
-                <div class="description-block">
-                  <h5 class="description-header" id="dashboard-account-number"></h5>
-                  <span class="description-text">ACCOUNT NUMBER</span>
-                </div>
-                <!-- /.description-block -->
-              </div>
-              <!-- /.col -->
-              <div class="col-sm-4">
-                <div class="description-block">
-                  <h5 class="description-header" id="dashboard-account-transactions"></h5>
-                  <span class="description-text">TRANSACTIONS</span>
-                </div>
-                <!-- /.description-block -->
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-          </div>
-        </div>
-        <!-- /.widget-user -->
-      </div>
 
       <div class="row">
         <div class="col-lg-12">
@@ -170,7 +163,7 @@
                     <th>Operation</th>
                     <th>Value</th>
                     <th>Date</th>
-                    <th>Transaction</th>
+                    <th>Transaction ID</th>
                   </tr>
                 </thead>
                 <tbody id="dashboard-table">

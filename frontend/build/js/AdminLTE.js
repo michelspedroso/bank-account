@@ -11,17 +11,18 @@ import Toasts from './Toasts'
 
 // Utils
 import Page from './utils/Page'
+import UserDetailPage from './utils/UserDetailPage'
 
 // Services
 import userService from './services/user'
 import recordService from './services/record'
 import accountService from './services/account'
 
-// Pagesg
+// Pages
 import RegisterPage from './pages/Register'
 import LoginPage from './pages/Login'
 import DashboardPage from './pages/Dashboard'
-import OpenAccountPage from './pages/Open-Account'
+import AccountPage from './pages/Account'
 import DepositPage from './pages/Deposit'
 import RefundPage from './pages/Refund'
 import TransferPage from './pages/Transfer'
@@ -38,13 +39,14 @@ export {
   Dropdown,
   Toasts,
   Page,
+  UserDetailPage,
   userService,
   recordService,
   accountService,
   RegisterPage,
   LoginPage,
   DashboardPage,
-  OpenAccountPage,
+  AccountPage,
   DepositPage,
   RefundPage,
   TransferPage,

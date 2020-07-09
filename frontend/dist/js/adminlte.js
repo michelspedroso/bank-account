@@ -1816,43 +1816,63 @@
   })(jQuery);
 
   const ACCESS_TOKEN = 'accessToken';
-  const USER_ID = 'userId';
+  const SELECTED_ACCOUNT = 'selectedAccount';
 
   class Page {
-    constructor() {
-      this.checkAuth();
-      this.init();
-      this.binds();
+    constructor(path) {
+      this.loadResource(path);
     }
 
     checkAuth() {
       const token = localStorage.getItem(ACCESS_TOKEN);
       const {
-        href
+        pathname
       } = window.location;
+      const isAccountPages = pathname == '/' || pathname.includes('register');
 
-      if (href.includes('login') || href.includes('register')) {
-        this.removeAtuh();
+      if (isAccountPages) {
+        this.removeAuth();
         return;
       }
 
-      if (!token) {
+      if (!isAccountPages && !token) {
         window.location.href = '/';
       }
     }
 
-    setAuth(accessToken, userId) {
+    loadResource(path) {
+      const pathName = window.location.pathname.replace(/\/|.html/g, '');
+      path = path.replace(/\/|.html/g, '');
+
+      if (pathName == path) {
+        this.checkAuth();
+        this.beforeInit();
+        this.init();
+        this.binds();
+      }
+    }
+
+    setAuth(accessToken) {
       localStorage.setItem(ACCESS_TOKEN, `Bearer ${accessToken}`);
-      localStorage.setItem(USER_ID, userId);
     }
 
     getAuth() {
       localStorage.getItem(ACCESS_TOKEN);
     }
 
-    removeAtuh() {
+    removeAuth() {
       localStorage.removeItem(ACCESS_TOKEN);
     }
+
+    setSelectedAccount(account) {
+      localStorage.setItem(SELECTED_ACCOUNT, account);
+    }
+
+    gettSelectedAccount() {
+      localStorage.getItem(SELECTED_ACCOUNT);
+    }
+
+    beforeInit() {}
 
     init() {}
 
@@ -1892,10 +1912,85 @@
     getDetail
   };
 
+  class UserDetailPage extends Page {
+    constructor(path) {
+      super(path);
+    }
+
+    async beforeInit() {
+      const user = await this.getDetail();
+
+      if (user.accounts.length) {
+        const [account] = user.accounts;
+
+        if (this.handleSelectAccount) {
+          await this.handleSelectAccount({
+            target: {
+              value: `${account.cc}@${account.formattedBalance}`
+            }
+          });
+        }
+      }
+
+      this.init();
+    }
+
+    async getDetail() {
+      try {
+        this.user = await userService.getDetail();
+        this.populateFields(this.user);
+        this.populateAccountDropdown(this.user.accounts);
+        return this.user;
+      } catch (err) {
+        this.checkAuth();
+        console.error(err);
+
+        if (err.responseJSON && err.responseJSON.message) {
+          $(document).Toasts('create', {
+            title: 'Error',
+            body: err.responseJSON.message,
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            delay: 3000
+          });
+        }
+      }
+    }
+
+    populateFields(user) {
+      $('#dashboard-name').text(`${user.firstName} ${user.lastName}`);
+      $('#dashboard-username').text(user.username);
+      $('#dashboard-balance').text('-');
+      $('#dashboard-account-number').text('-');
+      $('#dashboard-account-transactions').text(0);
+    }
+
+    populateAccountDropdown(accounts) {
+      const options = accounts.map((account, index) => {
+        let selected = this.gettSelectedAccount() || false;
+
+        if (selected && selected == account.cc) {
+          selected = 'selected';
+        }
+
+        return `<option ${selected} value="${account.cc}@${account.formattedBalance}">
+                    ${account.type}
+                </option>`;
+      });
+
+      if (!options.length) {
+        options.unshift(`<option value="none">Select account</option>`);
+      }
+
+      $('#dashboard-menu-accounts').html(options.join(''));
+    }
+
+  }
+
   async function getExtracts(payload, type = 'GET') {
     return request(`/record/extract`, type, payload);
   }
-  var recordService = {
+  var recordService$1 = {
     getExtracts
   };
 
@@ -1927,6 +2022,10 @@
   };
 
   class RegisterPage extends Page {
+    constructor() {
+      super('register');
+    }
+
     binds() {
       $('.register-box  button#submit').on('click', this.handleSignup.bind(this));
     }
@@ -1945,7 +2044,7 @@
         const {
           accessToken,
           userId
-        } = response.data;
+        } = response;
         this.setAuth(accessToken, userId);
         window.location.href = '/dashboard.html';
       } catch (err) {
@@ -1957,6 +2056,10 @@
   var Register = new RegisterPage();
 
   class LoginPage extends Page {
+    constructor() {
+      super('/');
+    }
+
     binds() {
       $('.login-box button#submit').on('click', this.handleSignIn.bind(this));
     }
@@ -1973,54 +2076,10 @@
         const {
           accessToken,
           userId
-        } = response.data;
+        } = response;
         this.setAuth(accessToken, userId);
         window.location.href = '/dashboard.html';
       } catch (err) {
-        alert(err.responseJSON.message);
-      }
-    }
-
-  }
-  var Login = new LoginPage();
-
-  class DashboardPage extends Page {
-    async init() {
-      const user = await this.getDetail();
-
-      if (user.accounts.length) {
-        const [account] = user.accounts;
-        await this.handleSelectAccount({
-          target: {
-            value: `${account.cc}@${account.formattedBalance}`
-          }
-        });
-      }
-    }
-
-    binds() {
-      $('#dashboard-menu-accounts').change(this.handleSelectAccount);
-      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
-      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
-      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
-      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
-      $('#dashboard').on('click', this.handleDashboard.bind(this));
-      $('#dashboard-logout').on('click', this.handleLogout.bind(this));
-    }
-
-    handleLogout() {
-      this.removeAtuh();
-      window.location.href = '/';
-    }
-
-    async getDetail() {
-      try {
-        this.user = await userService.getDetail();
-        this.populateFields(this.user);
-        this.populateAccountDropdown(this.user.accounts);
-        return this.user;
-      } catch (err) {
-        this.checkAuth();
         console.error(err);
 
         if (err.responseJSON && err.responseJSON.message) {
@@ -2035,6 +2094,31 @@
       }
     }
 
+  }
+  var Login = new LoginPage();
+
+  class DashboardPage extends UserDetailPage {
+    constructor() {
+      super('dashboard');
+    }
+
+    init() {}
+
+    binds() {
+      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
+      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
+      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+      $('#dashboard').on('click', this.handleDashboard.bind(this));
+      $('#dashboard-logout').on('click', this.handleLogout.bind(this));
+    }
+
+    handleLogout() {
+      this.removeAtuh();
+      window.location.href = '/';
+    }
+
     switchArrowStyle(extract) {
       if (extract.type === 'deposit' || !extract.fromAccount) {
         return 'success';
@@ -2044,11 +2128,11 @@
     }
 
     handleDashboard(event) {
-      window.location.href = '/dashboard.html';
+      window.location.href = 'dashboard.html';
     }
 
     handleCreateAccount(event) {
-      window.location.href = 'open-account.html';
+      window.location.href = 'account.html';
     }
 
     handleApplyDeposit(event) {
@@ -2063,13 +2147,17 @@
       window.location.href = 'transfer.html';
     }
 
-    async handleSelectAccount(event) {
-      const [cc, formattedBalance] = event.target.value.split('@');
+    populateMainInformations(cc, formattedBalance) {
       $('#dashboard-account-number').text(cc);
       $('#dashboard-balance').text(formattedBalance);
+    }
+
+    async handleSelectAccount(event) {
+      const [cc, formattedBalance] = event.target.value.split('@');
+      this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService.getExtracts({
+        const extracts = await recordService$1.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2080,7 +2168,7 @@
                 <td>${extract.type}</td>
                 <td><small class="text-${arrowStyle} mr-1"><i class="fas fa-arrow-${arrowStyle === 'success' ? 'up' : 'down'}"></i></small> ${extract.formatedValue}</td>
                 <td>${new Date(extract.createdAt).toLocaleString()}</td>
-                <td>123123213123-31231</td>
+                <td>${extract.transaction.id}</td>
                 </tr>`;
         });
         $('#dashboard-table').html(items.join());
@@ -2099,44 +2187,51 @@
       }
     }
 
-    populateFields(user) {
-      $('#dashboard-name').text(`${user.firstName} ${user.lastName}`);
-      $('#dashboard-username').text(user.username);
-      $('#dashboard-balance').text('-');
-      $('#dashboard-account-number').text('-');
-      $('#dashboard-account-transactions').text(0);
-    }
-
-    populateAccountDropdown(accounts) {
-      const options = accounts.map((account, index) => {
-        let selected = '';
-
-        if (index === 0) {
-          selected = 'selected';
-        }
-
-        return `<option ${selected} value="${account.cc}@${account.formattedBalance}">
-                    ${account.type}
-                </option>`;
-      });
-
-      if (!options.length) {
-        options.unshift(`<option value="none">Select account</option>`);
-      }
-
-      $('#dashboard-menu-accounts').html(options.join(''));
-    }
-
   }
   var Dashboard = new DashboardPage();
 
-  class OpenAccountPage extends Page {
+  function formatCPF(value) {
+    if (!value) return false;
+    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4');
+  }
+
+  class OpenAccountPage extends UserDetailPage {
+    constructor() {
+      super('account');
+    }
+
     init() {
       this.handleCreateAccount();
     }
 
     binds() {
       $('.create-account button#submit').on('click', this.createAccount.bind(this));
+      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
+      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
+      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+      $('#dashboard').on('click', this.handleDashboard.bind(this));
+    }
+
+    handleDashboard(event) {
+      window.location.href = 'dashboard.html';
+    }
+
+    handleCreateAccount(event) {
+      window.location.href = 'account.html';
+    }
+
+    handleApplyDeposit(event) {
+      window.location.href = 'deposit.html';
+    }
+
+    handleApplyRefund(event) {
+      window.location.href = 'refund.html';
+    }
+
+    handleApplyTransfer(event) {
+      window.location.href = 'transfer.html';
     }
 
     async handleCreateAccount(event) {
@@ -2147,7 +2242,7 @@
 
         if (account) {
           const cpf = account.cpf;
-          $('#dashboard-cpf').prop('disabled', true).val(cpf);
+          $('#dashboard-cpf').prop('disabled', true).val(formatCPF(cpf));
         }
 
         const items = accounts.map(account => `<option value="${account}">${account}</option>`);
@@ -2194,19 +2289,79 @@
       }
     }
 
-  }
-  var OpenAccount = new OpenAccountPage();
+    populateMainInformations(cc, formattedBalance) {
+      $('#dashboard-account-number').text(cc);
+      $('#dashboard-balance').text(formattedBalance);
+    }
 
-  class DepositPage extends Page {
+    async handleSelectAccount(event) {
+      const [cc, formattedBalance] = event.target.value.split('@');
+      this.setSelectedAccount(cc);
+      this.populateMainInformations(cc, formattedBalance);
+
+      try {
+        const extracts = await recordService$1.getExtracts({
+          cc
+        });
+        $('#dashboard-account-transactions').text(extracts.length || 0);
+      } catch (err) {
+        console.error(err);
+
+        if (err.responseJSON && err.responseJSON.message) {
+          $(document).Toasts('create', {
+            title: 'Error',
+            body: err.responseJSON.message,
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            delay: 3000
+          });
+        }
+      }
+    }
+
+  }
+  var Account = new OpenAccountPage();
+
+  class DepositPage extends UserDetailPage {
+    constructor() {
+      super('deposit');
+    }
+
     init() {
-      this.handlePopulateAccounts();
+      this.handlePopulateAccountsDeposit();
     }
 
     binds() {
-      $('.deposit button#submit').on('click', this.applyDeposit.bind(this)); // $("#dashboard-deposit-value").mask('##.##0,00', { reverse: true});
+      $('.deposit button#submit').on('click', this.applyDeposit.bind(this));
+      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
+      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
+      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+      $('#dashboard').on('click', this.handleDashboard.bind(this));
     }
 
-    async handlePopulateAccounts(event) {
+    handleDashboard(event) {
+      window.location.href = 'dashboard.html';
+    }
+
+    handleCreateAccount(event) {
+      window.location.href = 'account.html';
+    }
+
+    handleApplyDeposit(event) {
+      window.location.href = 'deposit.html';
+    }
+
+    handleApplyRefund(event) {
+      window.location.href = 'refund.html';
+    }
+
+    handleApplyTransfer(event) {
+      window.location.href = 'transfer.html';
+    }
+
+    async handlePopulateAccountsDeposit(event) {
       try {
         const accounts = await accountService.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
@@ -2253,20 +2408,75 @@
       }
     }
 
-    handleValue(event) {
-      console.log(event.target.value); // $("#dashboard-deposit-value").val(value);
+    populateMainInformations(cc, formattedBalance) {
+      $('#dashboard-account-number').text(cc);
+      $('#dashboard-balance').text(formattedBalance);
+    }
+
+    async handleSelectAccount(event) {
+      const [cc, formattedBalance] = event.target.value.split('@');
+      this.populateMainInformations(cc, formattedBalance);
+
+      try {
+        const extracts = await recordService.getExtracts({
+          cc
+        });
+        $('#dashboard-account-transactions').text(extracts.length || 0);
+      } catch (err) {
+        console.error(err);
+
+        if (err.responseJSON && err.responseJSON.message) {
+          $(document).Toasts('create', {
+            title: 'Error',
+            body: err.responseJSON.message,
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            delay: 3000
+          });
+        }
+      }
     }
 
   }
   var Deposit = new DepositPage();
 
-  class RefundPage extends Page {
+  class RefundPage extends UserDetailPage {
+    constructor() {
+      super('refund');
+    }
+
     init() {
       this.handlePopulateAccounts();
     }
 
     binds() {
       $('.refund button#submit').on('click', this.applyDeposit.bind(this));
+      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
+      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
+      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+      $('#dashboard').on('click', this.handleDashboard.bind(this));
+    }
+
+    handleDashboard(event) {
+      window.location.href = 'dashboard.html';
+    }
+
+    handleCreateAccount(event) {
+      window.location.href = 'account.html';
+    }
+
+    handleApplyDeposit(event) {
+      window.location.href = 'deposit.html';
+    }
+
+    handleApplyRefund(event) {
+      window.location.href = 'refund.html';
+    }
+
+    handleApplyTransfer(event) {
+      window.location.href = 'transfer.html';
     }
 
     async handlePopulateAccounts(event) {
@@ -2316,16 +2526,75 @@
       }
     }
 
+    populateMainInformations(cc, formattedBalance) {
+      $('#dashboard-account-number').text(cc);
+      $('#dashboard-balance').text(formattedBalance);
+    }
+
+    async handleSelectAccount(event) {
+      const [cc, formattedBalance] = event.target.value.split('@');
+      this.populateMainInformations(cc, formattedBalance);
+
+      try {
+        const extracts = await recordService.getExtracts({
+          cc
+        });
+        $('#dashboard-account-transactions').text(extracts.length || 0);
+      } catch (err) {
+        console.error(err);
+
+        if (err.responseJSON && err.responseJSON.message) {
+          $(document).Toasts('create', {
+            title: 'Error',
+            body: err.responseJSON.message,
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            delay: 3000
+          });
+        }
+      }
+    }
+
   }
   var Refund = new RefundPage();
 
-  class TransferPage extends Page {
+  class TransferPage extends UserDetailPage {
+    constructor() {
+      super('transfer');
+    }
+
     init() {
       this.handlePopulateAccounts();
     }
 
     binds() {
       $('.transfer button#submit').on('click', this.applyTransfer.bind(this));
+      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
+      $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
+      $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+      $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+      $('#dashboard').on('click', this.handleDashboard.bind(this));
+    }
+
+    handleDashboard(event) {
+      window.location.href = 'dashboard.html';
+    }
+
+    handleCreateAccount(event) {
+      window.location.href = 'account.html';
+    }
+
+    handleApplyDeposit(event) {
+      window.location.href = 'deposit.html';
+    }
+
+    handleApplyRefund(event) {
+      window.location.href = 'refund.html';
+    }
+
+    handleApplyTransfer(event) {
+      window.location.href = 'transfer.html';
     }
 
     async handlePopulateAccounts(event) {
@@ -2350,7 +2619,7 @@
     }
 
     async applyTransfer() {
-      let value = $('input#dashboard-deposit-value').val();
+      let value = $('input#dashboard-transfer-value').val();
       value = parseInt(value.replace(/(,|\.)/g, '') || 0);
       const toAccountNumber = $('#dashboard-transfer-to-account').val();
       const fromAccountNumber = $('#dashboard-transfer-from-account').val();
@@ -2377,9 +2646,39 @@
       }
     }
 
+    populateMainInformations(cc, formattedBalance) {
+      $('#dashboard-account-number').text(cc);
+      $('#dashboard-balance').text(formattedBalance);
+    }
+
+    async handleSelectAccount(event) {
+      const [cc, formattedBalance] = event.target.value.split('@');
+      this.populateMainInformations(cc, formattedBalance);
+
+      try {
+        const extracts = await recordService.getExtracts({
+          cc
+        });
+        $('#dashboard-account-transactions').text(extracts.length || 0);
+      } catch (err) {
+        console.error(err);
+
+        if (err.responseJSON && err.responseJSON.message) {
+          $(document).Toasts('create', {
+            title: 'Error',
+            body: err.responseJSON.message,
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            delay: 3000
+          });
+        }
+      }
+    }
+
   }
   var Transfer = new TransferPage();
 
+  exports.AccountPage = Account;
   exports.CardRefresh = CardRefresh;
   exports.CardWidget = CardWidget;
   exports.ControlSidebar = ControlSidebar;
@@ -2389,7 +2688,6 @@
   exports.Dropdown = Dropdown;
   exports.Layout = Layout;
   exports.LoginPage = Login;
-  exports.OpenAccountPage = OpenAccount;
   exports.Page = Page;
   exports.PushMenu = PushMenu;
   exports.RefundPage = Refund;
@@ -2398,8 +2696,9 @@
   exports.TodoList = TodoList;
   exports.TransferPage = Transfer;
   exports.Treeview = Treeview;
+  exports.UserDetailPage = UserDetailPage;
   exports.accountService = accountService;
-  exports.recordService = recordService;
+  exports.recordService = recordService$1;
   exports.userService = userService;
 
   Object.defineProperty(exports, '__esModule', { value: true });
