@@ -33,8 +33,18 @@ class DashboardPage extends Page {
             this.populateFields(this.user);
             this.populateAccountDropdown(this.user.accounts);
             return this.user;
-        } catch (e) {
+        } catch (err) {
             this.checkAuth();
+            console.error(err);
+            if (err.responseJSON && err.responseJSON.message) {
+                $(document).Toasts('create', {
+                    title: 'Error',
+                    body: err.responseJSON.message,
+                    autohide: true,
+                    icon: 'fas fa-exclamation-triangle',
+                    delay: 3000
+                  });
+            }
         }
     }
 
@@ -71,6 +81,7 @@ class DashboardPage extends Page {
         $('#dashboard-balance').text(formattedBalance);
         try {
             const extracts = await recordService.getExtracts({ cc });
+            $('#dashboard-account-transactions').text(extracts.length || 0);
             const items = extracts.map(extract => {
                 const arrowStyle = extract.type == 'deposit' ? 'success' : 'danger';
                 return `
@@ -83,7 +94,17 @@ class DashboardPage extends Page {
             });
             $('#dashboard-table').html(items.join());
         } catch (err) {
-            console.error(err)
+            console.error(err);
+            if (err.responseJSON && err.responseJSON.message) {
+                $(document).Toasts('create', {
+                    title: 'Error',
+                    body: err.responseJSON.message,
+                    autohide: true,
+                    icon: 'fas fa-exclamation-triangle',
+                    delay: 3000
+                  });
+            }
+
         }
     }
 
@@ -92,6 +113,7 @@ class DashboardPage extends Page {
         $('#dashboard-username').text(user.username);
         $('#dashboard-balance').text('-');
         $('#dashboard-account-number').text('-');
+        $('#dashboard-account-transactions').text(0);
     }
 
     populateAccountDropdown(accounts) {
@@ -104,7 +126,6 @@ class DashboardPage extends Page {
                     ${account.type}
                 </option>`;
         });
-        console.log(options)
         if (!options.length) {
             options.unshift(`<option value="none">Select account</option>`);
         }

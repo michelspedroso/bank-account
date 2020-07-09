@@ -20,12 +20,22 @@ class TransferPage extends Page {
             items.unshift(`<option selected disabled>Select one</option>`);
             $('#dashboard-transfer-from-account').html(items.join(''));
         } catch (err) {
-            console.error(err)
+            console.error(err);
+            if (err.responseJSON && err.responseJSON.message) {
+                $(document).Toasts('create', {
+                    title: 'Error',
+                    body: err.responseJSON.message,
+                    autohide: true,
+                    icon: 'fas fa-exclamation-triangle',
+                    delay: 3000
+                  });
+            }
         }
     }
 
     async applyTransfer() {
-        const value = $('input#dashboard-deposit-value').val();
+        let value = $('input#dashboard-deposit-value').val();
+        value = parseInt(value.replace(/(,|\.)/g,'') || 0);
         const toAccountNumber = $('#dashboard-transfer-to-account').val();
         const fromAccountNumber = $('#dashboard-transfer-from-account').val();
         
@@ -33,7 +43,16 @@ class TransferPage extends Page {
             await accountService.applyTransfer({ value, toAccountNumber, fromAccountNumber });
             window.location.href = 'dashboard.html';
         } catch (err) {
-            alert(err.responseJSON.message);
+            console.error(err);
+            if (err.responseJSON && err.responseJSON.message) {
+                $(document).Toasts('create', {
+                    title: 'Error',
+                    body: err.responseJSON.message,
+                    autohide: true,
+                    icon: 'fas fa-exclamation-triangle',
+                    delay: 3000
+                  });
+            }
         }
     }
 

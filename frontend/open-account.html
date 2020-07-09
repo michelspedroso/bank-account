@@ -33,12 +33,6 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="info">
-                        <a id="dashboard-name" class="d-block" val=""></a>
-                        <a id="dashboard-username" class="d-block" val=""></a>
-                    </div>
-                </div>
                 <select id="dashboard-menu-accounts" class="form-control select2">
                 </select>
                 <!-- <ul class="nav nav-treeview"> -->
@@ -103,10 +97,48 @@
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
+                    <div class="col-md-12">
+                        <!-- Widget: user widget style 1 -->
+                        <div class="card card-widget widget-user">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="widget-user-header bg-info">
+                                <h3 class="widget-user-username" id="dashboard-name"></h3>
+                            </div>
+                            <div class="widget-user-image">
+                                <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-sm-4 border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-balance"></h5>
+                                            <span class="description-text">BALANCE</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-4 border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-account-number"></h5>
+                                            <span class="description-text">ACCOUNT NUMBER</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-4">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-account-transactions"></h5>
+                                            <span class="description-text">TRANSACTIONS</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                        </div>
+                        <!-- /.widget-user -->
+                    </div>
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
@@ -122,7 +154,8 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="inputName">CPF</label>
-                                        <input max="99999999999" type="number" id="dashboard-cpf" class="form-control">
+                                        <input max="11" type="text" id="dashboard-cpf" class="form-control"
+                                            data-mask="000.000.000-00">
                                     </div>
                                     <div class="form-group">
                                         <label for="inputStatus">Account type</label>
@@ -163,7 +196,7 @@
             <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
             <!-- AdminLTE -->
             <script src="dist/js/adminlte.js"></script>
-
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 </body>
 
 </html>
