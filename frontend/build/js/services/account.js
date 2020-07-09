@@ -16,4 +16,8 @@ export async function applyDeposit(payload = {}, type = 'POST') {
   return request('/account/deposit', type, payload);
 }
 
-export default { getAccountTypes, createAccount, getAccounts, applyDeposit };
+export async function applyTransfer(payload = {}, type = 'POST') {
+  return request('/account/transfer', type, payload);
+}
+
+export default { getAccountTypes, createAccount, getAccounts, applyDeposit, applyTransfer };

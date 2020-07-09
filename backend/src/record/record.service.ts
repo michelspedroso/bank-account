@@ -26,16 +26,17 @@ export class RecordService {
 
     async getRecords(account: AccountEntity): Promise<RecordEntity[]> {
         // return await this.recordRepository.findRecordByAccount(account);
-        const [fromExtracts, toExtracts] = await Promise.all([
-            this.recordRepository.find({ where: { fromAccount: account }, relations: this.defaultRelations }),
-            this.recordRepository.find({ where: { toAccount: account }, relations: this.defaultRelations }),
-        ]);
-        const extracts = [ ...fromExtracts, ...toExtracts];
-        extracts.sort((a,b) => +b.createdAt - +a.createdAt);
-        return extracts;
+        // const [fromExtracts, toExtracts] = await Promise.all([
+        //     this.recordRepository.find({ where: { fromAccount: account }, relations: this.defaultRelations }),
+        //     this.recordRepository.find({ where: { toAccount: account }, relations: this.defaultRelations }),
+        // ]);
+        // const extracts = [ ...fromExtracts, ...toExtracts];
+        // extracts.sort((a,b) => +b.createdAt - +a.createdAt);
+        // return extracts;
+        return await this.recordRepository.find({ where: { toAccount: account }, relations: this.defaultRelations });
     }
 
-    async createDeposit(record: RecordEntity): Promise<RecordEntity> {
+    async create(record: RecordEntity): Promise<RecordEntity> {
         return await this.recordRepository.save(record);
     }
 

@@ -17,7 +17,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <div class="wrapper create-account">
+    <div class="wrapper deposit">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         </nav>
@@ -54,41 +54,36 @@
                         data-accordion="false">
                         <li id="dashboard" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <p>
-                                    Dashboard
-                                </p>
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Dashboard</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-create-account" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <p>
-                                    Create account
-                                </p>
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Create account</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-deposit" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <p>
-                                    Deposit
-                                </p>
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Deposit</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-refund" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <p>
-                                    Refund
-                                </p>
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Refund</p>
                             </a>
                             </a>
                         </li>
                         <li id="dashboard-apply-transfer" class="nav-item">
                             <a href="javascript:;" class="nav-link">
-                                <p>
-                                    Transfer
-                                </p>
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Transfer</p>
                             </a>
                             </a>
                         </li>
@@ -113,20 +108,20 @@
 
             <div class="content-wrapper">
                 <section class="content">
-                    <div class="row">
-                        <div class="col-4">
+                    <div class="col-4">
+                        <div>
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Open account</h3>
+                                    <h3 class="card-title">Deposit</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="inputName">CPF</label>
-                                        <input max="99999999999" type="number" id="dashboard-cpf" class="form-control">
+                                        <label for="inputName">Value</label>
+                                        <input type="text" id="dashboard-deposit-value" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputStatus">Account type</label>
-                                        <select id="dashboard-accounts-options" class="form-control custom-select">
+                                        <label for="inputStatus">Account</label>
+                                        <select id="dashboard-deposit-options" class="form-control custom-select">
                                         </select>
                                     </div>
                                 </div>
@@ -163,7 +158,6 @@
             <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
             <!-- AdminLTE -->
             <script src="dist/js/adminlte.js"></script>
-
 </body>
 
 </html>

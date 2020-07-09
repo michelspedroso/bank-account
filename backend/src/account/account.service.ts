@@ -18,7 +18,7 @@ import { Transactional } from 'typeorm-transactional-cls-hooked';
 import { PaymentBodyDto } from './dto/payment.body.dto';
 import { DepositBodyDto } from './dto/deposit.body.dto';
 import { BalenceUtils } from './etc/utils';
-import { ER_ACCOUNT_NOT_FOUND, ER_INVALID_CPF } from './etc/constants';
+import { ER_ACCOUNT_NOT_FOUND, ER_INVALID_CPF, ER_INVALID_OPERATION } from './etc/constants';
 import { RecordTypes } from './../record/etc/types';
 import { RecordService } from './../record/record.service';
 import { RecordEntity } from './../record/model/record.entity';
@@ -62,7 +62,7 @@ export class AccountService {
   }
 
   async saveRecord(record: RecordEntity) {
-    return await this.recordService.createDeposit(record);
+    return await this.recordService.create(record);
   }
 
   async isValidCpf(cpf: string) {
@@ -142,7 +142,7 @@ export class AccountService {
         toAccount,
         balance: toAccount.balance,
         value: body.value,
-        type: RecordTypes.Deposit
+        type: RecordTypes.Refund
       } as RecordEntity),
     ]);
 
@@ -157,6 +157,10 @@ export class AccountService {
       this.getAccountByNumber(body.fromAccountNumber, user),
     ]);
 
+    if (toAccount.user.id === user.id) {
+      throw new BadRequestException(ER_INVALID_OPERATION);
+    }
+
     fromAccount.balance = BalenceUtils.subtract(fromAccount.balance, body.value);
     toAccount.balance = BalenceUtils.add(toAccount.balance, body.value);
 
@@ -165,11 +169,11 @@ export class AccountService {
       this.accountRepository.save(toAccount),
       this.saveRecord({
         user,
-        toAccount,
-        fromAccount,
+        toAccount: fromAccount,
+        fromAccount: toAccount,
         balance: toAccount.balance,
         value: body.value,
-        type: RecordTypes.Deposit
+        type: RecordTypes.Transfer
       } as RecordEntity),
     ]);
 

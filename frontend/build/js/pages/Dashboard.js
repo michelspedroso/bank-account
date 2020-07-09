@@ -4,8 +4,12 @@ import recordService from './../services/record'
 import accountService from './../services/account';
 
 class DashboardPage extends Page {
-    init() {
-        this.getDetail();
+    async init() {
+        const user = await this.getDetail();
+        if (user.accounts.length) {
+            const [account] = user.accounts;
+            await this.handleSelectAccount({ target: { value: `${account.cc}@${account.formattedBalance}` }});
+        }
     }
 
     binds() {
@@ -13,6 +17,8 @@ class DashboardPage extends Page {
         $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
         $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
         $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
+        $('#dashboard-apply-transfer').on('click', this.handleApplyTransfer.bind(this));
+        $('#dashboard').on('click', this.handleDashboard.bind(this));
         $('#dashboard-logout').on('click', this.handleLogout.bind(this));
     }
 
@@ -26,6 +32,7 @@ class DashboardPage extends Page {
             this.user = await userService.getDetail();
             this.populateFields(this.user);
             this.populateAccountDropdown(this.user.accounts);
+            return this.user;
         } catch (e) {
             this.checkAuth();
         }
@@ -38,36 +45,45 @@ class DashboardPage extends Page {
         return 'danger';
     }
 
-    async handleCreateAccount(event) {
+    handleDashboard(event) {
+        window.location.href = '/dashboard.html';
+    }
+
+    handleCreateAccount(event) {
         window.location.href = 'open-account.html';
     }
 
-    async handleApplyDeposit(event) {
-        window.location.href = 'apply-deposit.html';
+    handleApplyDeposit(event) {
+        window.location.href = 'deposit.html';
     }
 
-    async handleApplyRefund(event) {
-        window.location.href = 'apply-refund.html';
+    handleApplyRefund(event) {
+        window.location.href = 'refund.html';
+    }
+
+    handleApplyTransfer(event) {
+        window.location.href = 'transfer.html';
     }
 
     async handleSelectAccount(event) {
-        const [cc, formatedBalance] = event.target.value.split('@');
+        const [cc, formattedBalance] = event.target.value.split('@');
         $('#dashboard-account-number').text(cc);
-        $('#dashboard-balance').text(formatedBalance);
+        $('#dashboard-balance').text(formattedBalance);
         try {
             const extracts = await recordService.getExtracts({ cc });
             const items = extracts.map(extract => {
-                const arrowStyle = extract.type === 'deposit' || !extract.fromAccount ? 'success' : 'danger';
+                const arrowStyle = extract.type == 'deposit' ? 'success' : 'danger';
                 return `
                 <tr>
                 <td>${extract.type}</td>
-                <td><small class="text-${arrowStyle} mr-1"><i class="fas fa-arrow-up"></i></small> ${extract.formatedValue}</td>
+                <td><small class="text-${arrowStyle} mr-1"><i class="fas fa-arrow-${arrowStyle === 'success' ? 'up' : 'down'}"></i></small> ${extract.formatedValue}</td>
+                <td>${new Date(extract.createdAt).toLocaleString()}</td>
                 <td>123123213123-31231</td>
                 </tr>`;
             });
             $('#dashboard-table').html(items.join());
         } catch (err) {
-            console.error(err.message)
+            console.error(err)
         }
     }
 
@@ -81,14 +97,14 @@ class DashboardPage extends Page {
     populateAccountDropdown(accounts) {
         const options = accounts.map((account, index) => {
             let selected = '';
-            if(index ===0){
+            if (index === 0) {
                 selected = 'selected';
             }
             return `<option ${selected} value="${account.cc}@${account.formattedBalance}">
                     ${account.type}
                 </option>`;
         });
-
+        console.log(options)
         if (!options.length) {
             options.unshift(`<option value="none">Select account</option>`);
         }

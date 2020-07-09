@@ -24,6 +24,7 @@ import DashboardPage from './pages/Dashboard'
 import OpenAccountPage from './pages/Open-Account'
 import DepositPage from './pages/Deposit'
 import RefundPage from './pages/Refund'
+import TransferPage from './pages/Transfer'
 
 export {
   ControlSidebar,
@@ -46,4 +47,5 @@ export {
   OpenAccountPage,
   DepositPage,
   RefundPage,
+  TransferPage,
 }
