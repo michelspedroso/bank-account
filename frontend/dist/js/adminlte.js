@@ -2046,6 +2046,18 @@
         firstName: $('input#firstName').val(),
         lastName: $('input#lastName').val()
       };
+      const isEmail = payload.username.match(/@/g);
+
+      if (!isEmail) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid email',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
 
       if (!payload.username || !payload.password || !payload.firstName || !payload.lastName) {
         $(document).Toasts('create', {
