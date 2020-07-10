@@ -51,7 +51,7 @@ class OpenAccountPage extends UserDetailPage {
             const account = user.accounts.length ? user.accounts[0] : false;
             if (account) {
                 const cpf = account.cpf;
-                $('#dashboard-cpf').prop('disabled', true).val(formatCPF(cpf));
+                $('#dashboard-cpf-label').prop('disabled', true).val(formatCPF(cpf));
             }
             const items = accounts.map(account => `<option value="${account}">${account}</option>`);
 
@@ -74,7 +74,7 @@ class OpenAccountPage extends UserDetailPage {
 
     async createAccount() {
         let cpf = $('input#dashboard-cpf').val();
-        cpf = parseInt(cpf.replace(/(,|\.)/g, '') || 0);
+        cpf = cpf.replace(/(,|\.)/g, '') || 0;
         const type = $('#dashboard-accounts-options').val();
         if (!type || !cpf) {
             $(document).Toasts('create', {

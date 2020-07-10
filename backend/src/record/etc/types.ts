@@ -2,5 +2,6 @@ export enum RecordTypes {
   Payment = 'payment',
   Deposit = 'deposit',
   Refund = 'refund',
-  Transfer = 'transfer'
+  TransferReceived = 'transfer-received',
+  TransferDelivered = 'transfer-delivered'
 }

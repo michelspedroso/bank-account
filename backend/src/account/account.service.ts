@@ -165,11 +165,11 @@ export class AccountService {
       this.accountRepository.save({ ...toAccount, balance: toValue }),
       this.saveRecord({
         user,
-        toAccount: toAccount,
-        fromAccount: fromAccount,
+        toAccount,
+        fromAccount,
         balance: toValue,
         value: body.value,
-        type: RecordTypes.Transfer
+        type: RecordTypes.TransferReceived
       } as RecordEntity),
       this.saveRecord({
         user: toAccount.user,
@@ -177,7 +177,7 @@ export class AccountService {
         fromAccount: toAccount,
         balance: toValue,
         value: body.value,
-        type: RecordTypes.Transfer
+        type: RecordTypes.TransferDelivered
       } as RecordEntity)
     ]);
 

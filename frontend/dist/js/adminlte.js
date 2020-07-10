@@ -2146,7 +2146,7 @@
     }
 
     handleLogout() {
-      this.removeAtuh();
+      this.removeAuth();
       window.location.href = '/';
     }
 
@@ -2194,7 +2194,7 @@
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
         const items = extracts.map(extract => {
-          const arrowStyle = extract.type == 'deposit' ? 'success' : 'danger';
+          const arrowStyle = extract.type == 'deposit' || extract.type == 'transfer-received' ? 'success' : 'danger';
           return `
                 <tr>
                 <td>${extract.type}</td>
@@ -2275,7 +2275,7 @@
 
         if (account) {
           const cpf = account.cpf;
-          $('#dashboard-cpf').prop('disabled', true).val(formatCPF(cpf));
+          $('#dashboard-cpf-label').prop('disabled', true).val(formatCPF(cpf));
         }
 
         const items = accounts.map(account => `<option value="${account}">${account}</option>`);
@@ -2299,7 +2299,7 @@
 
     async createAccount() {
       let cpf = $('input#dashboard-cpf').val();
-      cpf = parseInt(cpf.replace(/(,|\.)/g, '') || 0);
+      cpf = cpf.replace(/(,|\.)/g, '') || 0;
       const type = $('#dashboard-accounts-options').val();
 
       if (!type || !cpf) {

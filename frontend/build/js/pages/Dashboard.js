@@ -22,7 +22,7 @@ class DashboardPage extends UserDetailPage {
     }
 
     handleLogout() {
-        this.removeAtuh();
+        this.removeAuth();
         window.location.href = '/';
     }
 
@@ -66,7 +66,7 @@ class DashboardPage extends UserDetailPage {
             const extracts = await recordService.getExtracts({ cc });
             $('#dashboard-account-transactions').text(extracts.length || 0);
             const items = extracts.map(extract => {
-                const arrowStyle = extract.type == 'deposit' ? 'success' : 'danger';
+                const arrowStyle = (extract.type == 'deposit' || extract.type == 'transfer-received') ? 'success' : 'danger';
                 return `
                 <tr>
                 <td>${extract.type}</td>

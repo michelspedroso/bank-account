@@ -13,13 +13,13 @@ export class RecordEntity extends BaseEntity {
   @ApiProperty({ enum: RecordTypes, required: true })
   type: RecordTypes;
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'decimal', precision: 65, scale: 0, nullable: false })
   @ApiProperty({ type: Number, required: true })
   balance: number;
 
   formatedBalance: string;
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'decimal', precision: 65, scale: 0, nullable: false })
   @ApiProperty({ type: Number, required: true })
   value: number;
 
