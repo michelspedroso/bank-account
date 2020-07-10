@@ -37,19 +37,20 @@ class Page {
   }
 
   getAuth() {
-    localStorage.getItem(ACCESS_TOKEN);
+    return localStorage.getItem(ACCESS_TOKEN);
   }
 
   removeAuth() {
     localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(SELECTED_ACCOUNT);
   }
 
   setSelectedAccount(account) {
     localStorage.setItem(SELECTED_ACCOUNT, account);
   }
 
-  gettSelectedAccount() {
-    localStorage.getItem(SELECTED_ACCOUNT);
+  getSelectedAccount() {
+    return localStorage.getItem(SELECTED_ACCOUNT);
   }
 
   beforeInit() {

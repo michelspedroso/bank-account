@@ -1857,19 +1857,20 @@
     }
 
     getAuth() {
-      localStorage.getItem(ACCESS_TOKEN);
+      return localStorage.getItem(ACCESS_TOKEN);
     }
 
     removeAuth() {
       localStorage.removeItem(ACCESS_TOKEN);
+      localStorage.removeItem(SELECTED_ACCOUNT);
     }
 
     setSelectedAccount(account) {
       localStorage.setItem(SELECTED_ACCOUNT, account);
     }
 
-    gettSelectedAccount() {
-      localStorage.getItem(SELECTED_ACCOUNT);
+    getSelectedAccount() {
+      return localStorage.getItem(SELECTED_ACCOUNT);
     }
 
     beforeInit() {}
@@ -1973,7 +1974,8 @@
 
     populateAccountDropdown(accounts) {
       const options = accounts.map((account, index) => {
-        let selected = this.gettSelectedAccount() || false;
+        console.log(this.getSelectedAccount());
+        let selected = this.getSelectedAccount() || false;
 
         if (selected && selected == account.cc) {
           selected = 'selected';
@@ -2018,7 +2020,7 @@
   async function applyTransfer(payload = {}, type = 'POST') {
     return request('/account/transfer', type, payload);
   }
-  var recordService$1 = {
+  var accountService = {
     getAccountTypes,
     createAccount,
     getAccounts,
@@ -2183,6 +2185,7 @@
 
     async handleSelectAccount(event) {
       const [cc, formattedBalance] = event.target.value.split('@');
+      this.setSelectedAccount(cc);
       this.populateMainInformations(cc, formattedBalance);
 
       try {
@@ -2236,7 +2239,7 @@
 
     binds() {
       $('.create-account button#submit').on('click', this.createAccount.bind(this));
-      $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+      $('.account#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
       $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
       $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
       $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));
@@ -2266,7 +2269,7 @@
 
     async handleCreateAccount(event) {
       try {
-        const accounts = await recordService$1.getAccountTypes();
+        const accounts = await accountService.getAccountTypes();
         const user = await userService.getDetail();
         const account = user.accounts.length ? user.accounts[0] : false;
 
@@ -2311,7 +2314,7 @@
       }
 
       try {
-        await recordService$1.createAccount({
+        await accountService.createAccount({
           cpf,
           type
         });
@@ -2407,7 +2410,7 @@
 
     async handlePopulateAccountsDeposit(event) {
       try {
-        const accounts = await recordService$1.getAccounts();
+        const accounts = await accountService.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-deposit-options').html(items.join(''));
@@ -2433,7 +2436,7 @@
       const toAccountNumber = $('#dashboard-deposit-options').val();
 
       try {
-        await recordService$1.applyDeposit({
+        await accountService.applyDeposit({
           value,
           toAccountNumber
         });
@@ -2461,10 +2464,11 @@
 
     async handleSelectAccount(event) {
       const [cc, formattedBalance] = event.target.value.split('@');
+      this.setSelectedAccount(cc);
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService$1.getExtracts({
+        const extracts = await recordService.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2528,7 +2532,7 @@
 
     async handlePopulateAccounts(event) {
       try {
-        const accounts = await recordService$1.getAccounts();
+        const accounts = await accountService.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-deposit-options').html(items.join(''));
@@ -2565,7 +2569,7 @@
       }
 
       try {
-        await recordService$1.applyRefund({
+        await accountService.applyRefund({
           value,
           toAccountNumber
         });
@@ -2593,10 +2597,11 @@
 
     async handleSelectAccount(event) {
       const [cc, formattedBalance] = event.target.value.split('@');
+      this.setSelectedAccount(cc);
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService$1.getExtracts({
+        const extracts = await recordService.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2660,7 +2665,7 @@
 
     async handlePopulateAccounts(event) {
       try {
-        const accounts = await recordService$1.getAccounts();
+        const accounts = await accountService.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-transfer-from-account').html(items.join(''));
@@ -2698,7 +2703,7 @@
       }
 
       try {
-        await recordService$1.applyTransfer({
+        await accountService.applyTransfer({
           value,
           toAccountNumber,
           fromAccountNumber
@@ -2727,10 +2732,11 @@
 
     async handleSelectAccount(event) {
       const [cc, formattedBalance] = event.target.value.split('@');
+      this.setSelectedAccount(cc);
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService$1.getExtracts({
+        const extracts = await recordService.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2772,7 +2778,7 @@
   exports.TransferPage = Transfer;
   exports.Treeview = Treeview;
   exports.UserDetailPage = UserDetailPage;
-  exports.accountService = recordService$1;
+  exports.accountService = accountService;
   exports.recordService = recordService;
   exports.userService = userService;
 

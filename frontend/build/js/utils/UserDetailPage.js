@@ -52,7 +52,8 @@ class UserDetailPage extends Page {
 
     populateAccountDropdown(accounts) {
         const options = accounts.map((account, index) => {
-            let selected = this.gettSelectedAccount() || false;
+            console.log(this.getSelectedAccount())
+            let selected = this.getSelectedAccount() || false;
             if (selected && selected == account.cc) {
                 selected = 'selected';
             }

@@ -1,6 +1,6 @@
 import UserDetailPage from '../utils/UserDetailPage';
 import accountService from '../services/account';
-import recordService from '../services/account';
+import recordService from '../services/record';
 
 class DepositPage extends UserDetailPage {
     constructor(){
@@ -94,6 +94,7 @@ class DepositPage extends UserDetailPage {
 
     async handleSelectAccount(event) {
         const [cc, formattedBalance] = event.target.value.split('@');
+        this.setSelectedAccount(cc);
         this.populateMainInformations(cc, formattedBalance);
         try {
             const extracts = await recordService.getExtracts({ cc });

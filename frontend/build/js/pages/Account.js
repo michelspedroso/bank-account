@@ -15,7 +15,7 @@ class OpenAccountPage extends UserDetailPage {
 
     binds() {
         $('.create-account button#submit').on('click', this.createAccount.bind(this));
-        $('#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
+        $('.account#dashboard-menu-accounts').on('change', this.handleSelectAccount.bind(this));
         $('#dashboard-create-account').on('click', this.handleCreateAccount.bind(this));
         $('#dashboard-apply-deposit').on('click', this.handleApplyDeposit.bind(this));
         $('#dashboard-apply-refund').on('click', this.handleApplyRefund.bind(this));

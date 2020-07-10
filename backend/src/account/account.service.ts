@@ -48,7 +48,7 @@ export class AccountService {
   }
 
   generateAccountNumber(): string {
-    const numberAccount = Math.floor(Math.random() * 1000000);
+    const numberAccount = Math.floor(Math.random() * 899999 + 100000);
     const digit = Math.floor(Math.random() * 10) + 1;
     return `${numberAccount}-${digit}`;
   }
@@ -76,7 +76,7 @@ export class AccountService {
       where.user = user;
     }
 
-    const toAccount = await this.accountRepository.findOne(where);
+    const toAccount = await this.accountRepository.findOne({where, relations: ['user']});
     if (!toAccount) {
       throw new NotFoundException(ER_ACCOUNT_NOT_FOUND);
     }
@@ -113,10 +113,10 @@ export class AccountService {
     const user = await this.userService.getUserById(jwt.sub);
     const toAccount = await this.getAccountByNumber(body.toAccountNumber, user);
 
-    toAccount.balance = BalenceUtils.add(toAccount.balance, body.value);
+    const value = BalenceUtils.add(toAccount.balance, body.value);
 
     await Promise.all([
-      this.accountRepository.save(toAccount),
+      this.accountRepository.save({ ...toAccount, balance: value }),
       this.saveRecord({
         user,
         toAccount,
@@ -134,9 +134,9 @@ export class AccountService {
     const user = await this.userService.getUserById(jwt.sub);
     const toAccount = await this.getAccountByNumber(body.toAccountNumber);
 
-    toAccount.balance = BalenceUtils.subtract(toAccount.balance, body.value);
+    const value = BalenceUtils.subtract(toAccount.balance, body.value);
     await Promise.all([
-      this.accountRepository.save(toAccount),
+      this.accountRepository.save({ ...toAccount, balance: value }),
       this.saveRecord({
         user,
         toAccount,
@@ -156,25 +156,29 @@ export class AccountService {
       this.getAccountByNumber(body.toAccountNumber),
       this.getAccountByNumber(body.fromAccountNumber, user),
     ]);
-
-    if (toAccount.user.id === user.id) {
-      throw new BadRequestException(ER_INVALID_OPERATION);
-    }
-
-    fromAccount.balance = BalenceUtils.subtract(fromAccount.balance, body.value);
-    toAccount.balance = BalenceUtils.add(toAccount.balance, body.value);
+    
+    const fromValue = BalenceUtils.subtract(fromAccount.balance, body.value);
+    const toValue = BalenceUtils.add(toAccount.balance, body.value);
 
     await Promise.all([
-      this.accountRepository.save(fromAccount),
-      this.accountRepository.save(toAccount),
+      this.accountRepository.save({ ...fromAccount, balance: fromValue }),
+      this.accountRepository.save({ ...toAccount, balance: toValue }),
       this.saveRecord({
         user,
-        toAccount: fromAccount,
-        fromAccount: toAccount,
-        balance: toAccount.balance,
+        toAccount: toAccount,
+        fromAccount: fromAccount,
+        balance: toValue,
         value: body.value,
         type: RecordTypes.Transfer
       } as RecordEntity),
+      this.saveRecord({
+        user: toAccount.user,
+        toAccount: fromAccount,
+        fromAccount: toAccount,
+        balance: toValue,
+        value: body.value,
+        type: RecordTypes.Transfer
+      } as RecordEntity)
     ]);
 
     return await this.getAccountByUser(user);
