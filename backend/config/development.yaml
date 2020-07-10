@@ -1,0 +1,24 @@
+database:
+  type: ${{ DATABASE_TYPE }}
+  host: ${{ DATABASE_HOST }}
+  port: ${{ DATABASE_PORT }}
+  username: ${{ DATABASE_USERNAME }}
+  password: ${{ DATABASE_PASSWORD }}
+  database: ${{ DATABASE_DB }}
+  synchronize: true
+  logging: true
+  maxQueryExecutionTime: 60000
+  migrationsRun: false
+
+server:
+  port: 3000 
+
+jwt:
+  secret: "k#iVKDvd&pgu4Qj9i5EFny#ETXWH7A#iBCry"
+  expiresIn: "14d"
+
+swagger:
+  enable: true
+  path: "/docs"
+  name: "bank-account"
+  version: "0.0.1"

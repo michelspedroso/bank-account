@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  database:
+    container_name: bank-database
+    image: mysql:8
+    restart: always
+    command: --max_allowed_packet=32505856 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --default-authentication-plugin=mysql_native_password --innodb-print-all-deadlocks=ON
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ld8W6nkVbfBxbjB1
+      - MYSQL_DATABASE=bank
+    ports:
+      - 3306
+    volumes:
+      - './volumes/mysql:/var/lib/mysql'
+
+  backend:
+    container_name: bank-backend
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    environment:
+      - NODE_ENV=production

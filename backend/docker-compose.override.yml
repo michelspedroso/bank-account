@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  database:
+    ports:
+      - 33060:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ld8W6nkVbfBxbjB1
+    volumes:
+      - './mysql-initd.sql:/docker-entrypoint-initdb.d/init.sql'
+
+  backend:
+    ports:
+      - 33000:3000
+    environment:
+      - NODE_ENV=development
+      - DATABASE_TYPE=mysql
+      - DATABASE_HOST=database
+      - DATABASE_PORT=3306
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=Ld8W6nkVbfBxbjB1
+      - DATABASE_DB=bank
+    command: npm run start:dev
+    build:
+      context: .
+      dockerfile: DockerfileDev
+    volumes:
+      - ./src:/srv/www/api.bankaccount.com/src:rw
+      - ./config:/srv/www/api.bankaccount.com/config:rw
+      - ./package.json:/srv/www/api.bankaccount.com/package.json:rw

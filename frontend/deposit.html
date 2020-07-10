@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper deposit">
+        <!-- Navbar -->
+        <nav id="dashboard-navbar" class="main-header navbar navbar-expand navbar-white navbar-light">
+            <div>
+                <a class="widget-user-desc" id="dashboard-username"></a>
+                <a id="dashboard-logout" href="javascript:;">Logout</a>
+            </div>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="dashboard.html" class="brand-link">
+                <span class="brand-text font-weight-light">Bank-account</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a id="dashboard-name" class="d-block" val=""></a>
+                        <a id="dashboard-username" class="d-block" val=""></a>
+                    </div>
+                </div> -->
+                <div class="px-1 mb-5 mt-3">
+                    <p style="color: #c2c7d0;">Selected Account</p>
+                    <select id="dashboard-menu-accounts" class="form-control select2">
+                    </select>
+                  </div>
+                <!-- <ul class="nav nav-treeview"> -->
+                <!-- <li class="nav-item">
+            <a class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Dashboard v1</p>
+            </a>
+          </li> -->
+                <!-- </ul> -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li id="dashboard" class="nav-item">
+                            <a href="javascript:;" class="nav-link">
+                                <p>Dashboard</p>
+                            </a>
+                            </a>
+                        </li>
+                        <li id="dashboard-create-account" class="nav-item">
+                            <a href="javascript:;" class="nav-link">
+                                <p>Create account</p>
+                            </a>
+                            </a>
+                        </li>
+                        <li id="dashboard-apply-deposit" class="nav-item">
+                            <a href="javascript:;" class="nav-link active">
+                                <p>Deposit</p>
+                            </a>
+                            </a>
+                        </li>
+                        <li id="dashboard-apply-refund" class="nav-item">
+                            <a href="javascript:;" class="nav-link">
+                                <p>Refund</p>
+                            </a>
+                            </a>
+                        </li>
+                        <li id="dashboard-apply-transfer" class="nav-item">
+                            <a href="javascript:;" class="nav-link">
+                                <p>Transfer</p>
+                            </a>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="col-md-12">
+                        <!-- Widget: user widget style 1 -->
+                        <div class="card card-widget widget-user">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="widget-user-header bg-info">
+                                <h3 class="widget-user-username" id="dashboard-name"></h3>
+                                <h2 class="widget-user-username" id="dashboard-cpf-label"></h2>
+                            </div>
+                            <div class="widget-user-image">
+                                <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-sm-4 border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-balance"></h5>
+                                            <span class="description-text">BALANCE</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-4 border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-account-number"></h5>
+                                            <span class="description-text">ACCOUNT NUMBER</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-4">
+                                        <div class="description-block">
+                                            <h5 class="description-header" id="dashboard-account-transactions"></h5>
+                                            <span class="description-text">TRANSACTIONS</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                        </div>
+                        <!-- /.widget-user -->
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <div>
+                <section class="content">
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <div>
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Deposit</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="inputName">Value</label>
+                                            <input type="text" maxLength="10" id="dashboard-deposit-value"
+                                                class="form-control" data-mask="#.##0,00" data-mask-reverse="true" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputStatus">Account</label>
+                                            <select id="dashboard-deposit-options" class="form-control custom-select">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="row p-3">
+                                        <div class="col-4">
+                                            <button id="submit" type="submit"
+                                                class="btn btn-primary btn-block">Register</button>
+                                        </div>
+                                        <div class="col-4"></div>
+                                        <div class="col-4"
+                                            style="text-align: right; padding-top: 5px; padding-right: 25px;">
+                                            <a href="dashboard.html">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                </section>
+
+                <!-- Control Sidebar -->
+                <aside class="control-sidebar control-sidebar-dark">
+                    <!-- Control sidebar content goes here -->
+                </aside>
+                <!-- /.control-sidebar -->
+
+            </div>
+            <!-- ./wrapper -->
+
+            <!-- REQUIRED SCRIPTS -->
+
+            <!-- jQuery -->
+            <script src="plugins/jquery/jquery.min.js"></script>
+            <!-- Bootstrap -->
+            <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <!-- AdminLTE -->
+            <script src="dist/js/adminlte.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+</body>
+
+</html>
