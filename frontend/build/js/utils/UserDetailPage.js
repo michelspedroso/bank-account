@@ -34,6 +34,7 @@ class UserDetailPage extends Page {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }
@@ -41,6 +42,9 @@ class UserDetailPage extends Page {
     populateFields(user) {
         $('#dashboard-name').text(`${user.firstName} ${user.lastName}`);
         $('#dashboard-username').text(user.username);
+        if (user.accounts.length) {
+            $('#dashboard-cpf-label').text(user.accounts[0].cpf);
+        }
         $('#dashboard-balance').text('-');
         $('#dashboard-account-number').text('-');
         $('#dashboard-account-transactions').text(0);

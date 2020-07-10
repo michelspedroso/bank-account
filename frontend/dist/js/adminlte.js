@@ -1953,6 +1953,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -1960,6 +1961,11 @@
     populateFields(user) {
       $('#dashboard-name').text(`${user.firstName} ${user.lastName}`);
       $('#dashboard-username').text(user.username);
+
+      if (user.accounts.length) {
+        $('#dashboard-cpf-label').text(user.accounts[0].cpf);
+      }
+
       $('#dashboard-balance').text('-');
       $('#dashboard-account-number').text('-');
       $('#dashboard-account-transactions').text(0);
@@ -1990,7 +1996,7 @@
   async function getExtracts(payload, type = 'GET') {
     return request(`/record/extract`, type, payload);
   }
-  var recordService$1 = {
+  var recordService = {
     getExtracts
   };
 
@@ -2012,7 +2018,7 @@
   async function applyTransfer(payload = {}, type = 'POST') {
     return request('/account/transfer', type, payload);
   }
-  var accountService = {
+  var recordService$1 = {
     getAccountTypes,
     createAccount,
     getAccounts,
@@ -2038,6 +2044,17 @@
         firstName: $('input#firstName').val(),
         lastName: $('input#lastName').val()
       };
+
+      if (!payload.username || !payload.password || !payload.firstName || !payload.lastName) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid parameters',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
 
       try {
         const response = await userService.signup(payload);
@@ -2071,6 +2088,17 @@
         password: $('input#password').val()
       };
 
+      if (!payload.username || !payload.password) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid parameters',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
+
       try {
         const response = await userService.signin(payload);
         const {
@@ -2090,6 +2118,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2157,7 +2186,7 @@
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService$1.getExtracts({
+        const extracts = await recordService.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2183,6 +2212,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2236,7 +2266,7 @@
 
     async handleCreateAccount(event) {
       try {
-        const accounts = await accountService.getAccountTypes();
+        const accounts = await recordService$1.getAccountTypes();
         const user = await userService.getDetail();
         const account = user.accounts.length ? user.accounts[0] : false;
 
@@ -2259,6 +2289,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2268,8 +2299,19 @@
       cpf = parseInt(cpf.replace(/(,|\.)/g, '') || 0);
       const type = $('#dashboard-accounts-options').val();
 
+      if (!type || !cpf) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid parameters',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
+
       try {
-        await accountService.createAccount({
+        await recordService$1.createAccount({
           cpf,
           type
         });
@@ -2285,6 +2327,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2300,7 +2343,7 @@
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService$1.getExtracts({
+        const extracts = await recordService.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2315,6 +2358,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2363,7 +2407,7 @@
 
     async handlePopulateAccountsDeposit(event) {
       try {
-        const accounts = await accountService.getAccounts();
+        const accounts = await recordService$1.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-deposit-options').html(items.join(''));
@@ -2378,6 +2422,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2388,7 +2433,7 @@
       const toAccountNumber = $('#dashboard-deposit-options').val();
 
       try {
-        await accountService.applyDeposit({
+        await recordService$1.applyDeposit({
           value,
           toAccountNumber
         });
@@ -2404,6 +2449,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2418,7 +2464,7 @@
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService.getExtracts({
+        const extracts = await recordService$1.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2433,6 +2479,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2481,7 +2528,7 @@
 
     async handlePopulateAccounts(event) {
       try {
-        const accounts = await accountService.getAccounts();
+        const accounts = await recordService$1.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-deposit-options').html(items.join(''));
@@ -2496,6 +2543,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2505,8 +2553,19 @@
       value = parseInt(value.replace(/(,|\.)/g, '') || 0);
       const toAccountNumber = $('#dashboard-deposit-options').val();
 
+      if (!value || !toAccountNumber) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid parameters',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
+
       try {
-        await accountService.applyRefund({
+        await recordService$1.applyRefund({
           value,
           toAccountNumber
         });
@@ -2522,6 +2581,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2536,7 +2596,7 @@
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService.getExtracts({
+        const extracts = await recordService$1.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2551,6 +2611,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2599,7 +2660,7 @@
 
     async handlePopulateAccounts(event) {
       try {
-        const accounts = await accountService.getAccounts();
+        const accounts = await recordService$1.getAccounts();
         const items = accounts.map(account => `<option value="${account.cc}">${account.cc}</option>`);
         items.unshift(`<option selected disabled>Select one</option>`);
         $('#dashboard-transfer-from-account').html(items.join(''));
@@ -2614,6 +2675,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2624,8 +2686,19 @@
       const toAccountNumber = $('#dashboard-transfer-to-account').val();
       const fromAccountNumber = $('#dashboard-transfer-from-account').val();
 
+      if (!value || !toAccountNumber || !fromAccountNumber) {
+        $(document).Toasts('create', {
+          title: 'Error',
+          body: 'Invalid parameters',
+          autohide: true,
+          icon: 'fas fa-exclamation-triangle',
+          delay: 3000
+        });
+        return;
+      }
+
       try {
-        await accountService.applyTransfer({
+        await recordService$1.applyTransfer({
           value,
           toAccountNumber,
           fromAccountNumber
@@ -2642,6 +2715,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2656,7 +2730,7 @@
       this.populateMainInformations(cc, formattedBalance);
 
       try {
-        const extracts = await recordService.getExtracts({
+        const extracts = await recordService$1.getExtracts({
           cc
         });
         $('#dashboard-account-transactions').text(extracts.length || 0);
@@ -2671,6 +2745,7 @@
             icon: 'fas fa-exclamation-triangle',
             delay: 3000
           });
+          return;
         }
       }
     }
@@ -2697,8 +2772,8 @@
   exports.TransferPage = Transfer;
   exports.Treeview = Treeview;
   exports.UserDetailPage = UserDetailPage;
-  exports.accountService = accountService;
-  exports.recordService = recordService$1;
+  exports.accountService = recordService$1;
+  exports.recordService = recordService;
   exports.userService = userService;
 
   Object.defineProperty(exports, '__esModule', { value: true });

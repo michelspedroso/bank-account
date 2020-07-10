@@ -67,6 +67,7 @@ class OpenAccountPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }
@@ -75,6 +76,16 @@ class OpenAccountPage extends UserDetailPage {
         let cpf = $('input#dashboard-cpf').val();
         cpf = parseInt(cpf.replace(/(,|\.)/g, '') || 0);
         const type = $('#dashboard-accounts-options').val();
+        if (!type || !cpf) {
+            $(document).Toasts('create', {
+                title: 'Error',
+                body: 'Invalid parameters',
+                autohide: true,
+                icon: 'fas fa-exclamation-triangle',
+                delay: 3000
+            });
+            return;
+        }
         try {
             await accountService.createAccount({ cpf, type });
             window.location.href = 'dashboard.html'
@@ -88,6 +99,7 @@ class OpenAccountPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }
@@ -114,6 +126,7 @@ class OpenAccountPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }

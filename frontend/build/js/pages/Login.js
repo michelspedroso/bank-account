@@ -16,7 +16,16 @@ class LoginPage extends Page {
             username: $('input#username').val(),
             password: $('input#password').val()
         };
-
+        if (!payload.username || !payload.password) {
+            $(document).Toasts('create', {
+                title: 'Error',
+                body: 'Invalid parameters',
+                autohide: true,
+                icon: 'fas fa-exclamation-triangle',
+                delay: 3000
+            });
+            return;
+        }
         try {
             const response = await userService.signin(payload);
             const { accessToken, userId } = response;
@@ -32,6 +41,7 @@ class LoginPage extends Page {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }

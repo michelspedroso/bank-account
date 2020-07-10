@@ -106,6 +106,7 @@
                             <!-- Add the bg color to the header using any of the bg-* classes -->
                             <div class="widget-user-header bg-info">
                                 <h3 class="widget-user-username" id="dashboard-name"></h3>
+                                <h2 class="widget-user-username" id="dashboard-cpf-label"></h2>
                             </div>
                             <div class="widget-user-image">
                                 <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
@@ -160,11 +161,11 @@
                                         <div class="form-group">
                                             <label for="inputName">Value</label>
                                             <input type="text" maxLength="10" id="dashboard-deposit-value"
-                                                class="form-control" data-mask="#.##0,00" data-mask-reverse="true">
+                                                class="form-control" data-mask="#.##0,00" data-mask-reverse="true" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputStatus">Account</label>
-                                            <select id="dashboard-deposit-options" class="form-control custom-select">
+                                            <select id="dashboard-deposit-options" class="form-control custom-select" required>
                                             </select>
                                         </div>
                                     </div>

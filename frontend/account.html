@@ -110,6 +110,7 @@
                             <!-- Add the bg color to the header using any of the bg-* classes -->
                             <div class="widget-user-header bg-info">
                                 <h3 class="widget-user-username" id="dashboard-name"></h3>
+                                <h2 class="widget-user-username" id="dashboard-cpf-label"></h2>
                             </div>
                             <div class="widget-user-image">
                                 <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
@@ -163,11 +164,11 @@
                                     <div class="form-group">
                                         <label for="inputName">CPF</label>
                                         <input max="11" type="text" id="dashboard-cpf" class="form-control"
-                                            data-mask="000.000.000-00">
+                                            data-mask="000.000.000-00" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputStatus">Account type</label>
-                                        <select id="dashboard-accounts-options" class="form-control custom-select">
+                                        <select id="dashboard-accounts-options" class="form-control custom-select" required>
                                         </select>
                                     </div>
                                 </div>

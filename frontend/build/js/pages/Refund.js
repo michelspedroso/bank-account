@@ -1,5 +1,6 @@
 import UserDetailPage from '../utils/UserDetailPage';
 import accountService from '../services/account';
+import recordService from '../services/account';
 
 class RefundPage extends UserDetailPage {
     constructor(){
@@ -56,6 +57,7 @@ class RefundPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -65,6 +67,16 @@ class RefundPage extends UserDetailPage {
         value = parseInt(value.replace(/(,|\.)/g,'') || 0);
         const toAccountNumber = $('#dashboard-deposit-options').val();
         
+        if(!value || ! toAccountNumber) {
+            $(document).Toasts('create', {
+                title: 'Error',
+                body: 'Invalid parameters',
+                autohide: true,
+                icon: 'fas fa-exclamation-triangle',
+                delay: 3000
+            });
+            return;
+        }
         try {
             await accountService.applyRefund({ value, toAccountNumber });
             window.location.href = 'dashboard.html';
@@ -78,6 +90,7 @@ class RefundPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -103,6 +116,7 @@ class RefundPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }

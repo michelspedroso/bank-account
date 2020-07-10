@@ -1,5 +1,6 @@
 import UserDetailPage from '../utils/UserDetailPage';
 import accountService from '../services/account';
+import recordService from '../services/account';
 
 class TransferPage extends UserDetailPage {
     constructor(){
@@ -57,6 +58,7 @@ class TransferPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -67,6 +69,16 @@ class TransferPage extends UserDetailPage {
         const toAccountNumber = $('#dashboard-transfer-to-account').val();
         const fromAccountNumber = $('#dashboard-transfer-from-account').val();
         
+        if(!value || !toAccountNumber || !fromAccountNumber) {
+            $(document).Toasts('create', {
+                title: 'Error',
+                body: 'Invalid parameters',
+                autohide: true,
+                icon: 'fas fa-exclamation-triangle',
+                delay: 3000
+            });
+            return;
+        }
         try {
             await accountService.applyTransfer({ value, toAccountNumber, fromAccountNumber });
             window.location.href = 'dashboard.html';
@@ -80,6 +92,7 @@ class TransferPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -105,6 +118,7 @@ class TransferPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }

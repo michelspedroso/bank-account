@@ -1,5 +1,6 @@
 import UserDetailPage from '../utils/UserDetailPage';
 import accountService from '../services/account';
+import recordService from '../services/account';
 
 class DepositPage extends UserDetailPage {
     constructor(){
@@ -58,6 +59,7 @@ class DepositPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -80,6 +82,7 @@ class DepositPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                   });
+                  return;
             }
         }
     }
@@ -105,6 +108,7 @@ class DepositPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }

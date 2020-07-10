@@ -85,6 +85,7 @@ class DashboardPage extends UserDetailPage {
                     icon: 'fas fa-exclamation-triangle',
                     delay: 3000
                 });
+                return;
             }
         }
     }

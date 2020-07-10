@@ -102,6 +102,7 @@
                             <!-- Add the bg color to the header using any of the bg-* classes -->
                             <div class="widget-user-header bg-info">
                                 <h3 class="widget-user-username" id="dashboard-name"></h3>
+                                <h2 class="widget-user-username" id="dashboard-cpf-label"></h2>
                             </div>
                             <div class="widget-user-image">
                                 <img class="img-circle elevation-2" src="../dist/img/warren.png" alt="User Avatar">
@@ -155,17 +156,17 @@
                                     <div class="form-group">
                                         <label for="inputName">Value</label>
                                         <input type="text" maxLength="10" id="dashboard-transfer-value"
-                                            class="form-control" data-mask="#.##0,00" data-mask-reverse="true">
+                                            class="form-control" data-mask="#.##0,00" data-mask-reverse="true" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputStatus">From Account</label>
-                                        <select id="dashboard-transfer-from-account" class="form-control custom-select">
+                                        <select id="dashboard-transfer-from-account" class="form-control custom-select" required>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputStatus">To Account</label>
                                         <input id="dashboard-transfer-to-account" class="form-control"
-                                            data-mask="000000-0"></input>
+                                            data-mask="000000-0" required></input>
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
