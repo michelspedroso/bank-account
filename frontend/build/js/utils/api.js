@@ -1,5 +1,5 @@
 function host(path) {
-  return `http://localhost:33000${path}`;
+  return `http://64.225.14.214:33000${path}`;
 }
 
 async function request(url, type = 'GET', data = {}) {
