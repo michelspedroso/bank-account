@@ -1,5 +1,5 @@
 function host(path) {
-  return `http://64.225.14.214:33000${path}`;
+  return `https://warren.utopic.tech/api${path}`;
 }
 
 async function request(url, type = 'GET', data = {}) {
