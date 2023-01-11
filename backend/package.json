@@ -37,7 +37,7 @@
     "@nestjs/swagger": "^4.5.12",
     "@nestjs/typeorm": "^7.1.0",
     "bcrypt": "^5.0.0",
-    "class-validator": "^0.12.2",
+    "class-validator": "^0.14.0",
     "consul": "^0.37.0",
     "etcd3": "^1.0.1",
     "mysql": "^2.18.1",
